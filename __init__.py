@@ -1,4 +1,6 @@
 from collections import namedtuple
+from kivy.app import App
+from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.properties import ListProperty
 from kivy.uix.camera import Camera
@@ -71,3 +73,21 @@ class ZBarCam(AnchorLayout):
                 bounds=None)
             symbols.append(qrcode)
         self.symbols = symbols
+
+
+DEMO_APP_KV_LANG = """
+BoxLayout:
+    orientation: 'vertical'
+    ZBarCam:
+        id: zbarcam
+"""
+
+
+class DemoApp(App):
+
+    def build(self):
+        return Builder.load_string(DEMO_APP_KV_LANG)
+
+
+if __name__ == '__main__':
+    DemoApp().run()
