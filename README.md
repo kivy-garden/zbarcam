@@ -4,8 +4,9 @@ Real time Barcode and QR Code scanner using the camera.
 It's built on top of [Kivy](https://github.com/kivy/kivy) and [ZBar](https://github.com/ZBar/ZBar).
 
 ## How to use
-Simply instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
+Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
 ```
+#:import ZBarCam zbarcam
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
