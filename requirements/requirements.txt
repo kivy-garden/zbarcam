@@ -1,1 +1,4 @@
 zbar==0.10
+Kivy==1.10.0
+Kivy-Garden==0.1.4
+Pillow==4.3.0
