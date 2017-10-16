@@ -18,9 +18,9 @@ BoxLayout:
 
 ## Install
 ```
-pip install -r requirements/requirements.txt
+pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 ```
-You also need to compile OpenCV2 manually and deploy `cv2.so` to your `site-packages/`.
+You may also need to compile OpenCV2 manually and deploy `cv2.so` to your `site-packages/`.
 
 ## Credits
 I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).
