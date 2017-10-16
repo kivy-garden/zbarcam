@@ -1,8 +1,6 @@
 from collections import namedtuple
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty, ListProperty, BooleanProperty, \
-            NumericProperty
+from kivy.properties import ListProperty
 from kivy.uix.camera import Camera
 import zbar
 import PIL
@@ -17,8 +15,8 @@ class ZBarCam(AnchorLayout):
 
     symbols = ListProperty([])
 
-    Qrcode = namedtuple('Qrcode',
-            ['type', 'data', 'bounds', 'quality', 'count'])
+    Qrcode = namedtuple(
+            'Qrcode', ['type', 'data', 'bounds', 'quality', 'count'])
 
     def __init__(self, **kwargs):
         super(ZBarCam, self).__init__(**kwargs)
@@ -36,7 +34,8 @@ class ZBarCam(AnchorLayout):
         # self.start()
 
     def _on_texture(self, instance):
-        self._detect_qrcode_frame(instance=None, camera=instance, texture=instance.texture)
+        self._detect_qrcode_frame(
+            instance=None, camera=instance, texture=instance.texture)
 
     # TODO
     def start(self):
@@ -58,8 +57,6 @@ class ZBarCam(AnchorLayout):
         raw_image = pil_image.tobytes()
         zimage = zbar.Image(width, height, "Y800", raw_image)
         result = self.scanner.scan(zimage)
-        for symbol in zimage:
-            print("zbar found a symbol, " + repr(symbol.type) + ": " + symbol.data)
         if result == 0:
             self.symbols = []
             return
