@@ -80,6 +80,10 @@ BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+    Label:
+        size_y: 20
+        size_hint_y: None
+        text: ", ".join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
 
