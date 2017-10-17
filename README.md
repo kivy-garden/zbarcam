@@ -18,6 +18,11 @@ BoxLayout:
 ```
 
 ## Install
+Install system requirements (Ubuntu 16.04):
+```
+sudo apt install libzbar-dev
+```
+Install zbarcam:
 ```
 pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 ```
