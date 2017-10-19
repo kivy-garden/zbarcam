@@ -87,6 +87,7 @@ fullscreen = 0
 
 # (list) Permissions
 #android.permissions = INTERNET
+android.permissions = CAMERA
 
 # (int) Android API to use
 #android.api = 19
