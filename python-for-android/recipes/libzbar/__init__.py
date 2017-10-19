@@ -10,7 +10,7 @@ class LibZBarRecipe(Recipe):
 
     url = 'https://github.com/ZBar/ZBar/archive/{version}.zip'
 
-    depends = ['hostpython2', 'python2']
+    depends = ['hostpython2', 'python2', 'libiconv']
 
     patches = ["werror.patch"]
 
