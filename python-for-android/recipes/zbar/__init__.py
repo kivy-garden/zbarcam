@@ -4,7 +4,9 @@ from pythonforandroid.recipe import PythonRecipe
 
 class ZBarRecipe(PythonRecipe):
 
-    url = 'https://github.com/ZBar/ZBar/archive/master.zip'
+    version = '0.10'
+
+    url = 'https://github.com/ZBar/ZBar/archive/{version}.zip'
 
     call_hostpython_via_targetpython = False
 

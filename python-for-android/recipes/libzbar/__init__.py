@@ -20,6 +20,13 @@ class LibZBarRecipe(Recipe):
          libiconv = self.get_recipe('libiconv', self.ctx)
          libiconv_dir = libiconv.get_build_dir(arch.arch)
          env['CFLAGS'] += ' -I' + os.path.join(libiconv_dir, 'include')
+         # TODO
+         env['LDSHARED'] = env['CC'] + \
+            ' -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
+         # env['LDFLAGS'] += ' -L{}'.format(libiconv_dir)
+         # TODO: hardcoded Python version
+         # env['LDFLAGS'] += " -landroid -lpython2.7 -lsecp256k1"
+         env['LDFLAGS'] += " -landroid -liconv"
          return env
 
     def build_arch(self, arch):
@@ -42,10 +49,11 @@ class LibZBarRecipe(Recipe):
                 '--with-imagemagick=no',
                 '--enable-pthread=no',
                 '--enable-video=no',
-                '--enable-shared=no',
+                '--enable-shared=yes',
+                '--enable-static=no',
                 _env=env)
             shprint(sh.make, '-j' + str(cpu_count()), _env=env)
-            libs = ['.libs/libzbar.so']
+            libs = ['zbar/.libs/libzbar.so']
             self.install_libs(arch, *libs)
 
 
