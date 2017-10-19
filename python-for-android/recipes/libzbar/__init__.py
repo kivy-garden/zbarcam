@@ -24,15 +24,12 @@ class LibZBarRecipe(Recipe):
         libiconv = self.get_recipe('libiconv', self.ctx)
         libiconv_dir = libiconv.get_build_dir(arch.arch)
         env['CFLAGS'] += ' -I' + os.path.join(libiconv_dir, 'include')
-        # TODO
         env['LDSHARED'] = env['CC'] + \
             ' -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
-        # env['LDFLAGS'] += ' -L{}'.format(libiconv_dir)
         env['LDFLAGS'] += " -landroid -liconv"
         return env
 
     def build_arch(self, arch):
-        # https://sourceforge.net/p/zbar/discussion/664595/thread/fcf39edc/
         super(LibZBarRecipe, self).build_arch(arch)
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
