@@ -8,6 +8,17 @@ from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.camera import Camera
 
+# Pillow is not currently available for Android:
+# https://github.com/kivy/python-for-android/pull/786
+try:
+    # Pillow
+    PIL.Image.frombytes
+    PIL.Image.Image.tobytes
+except AttributeError:
+    # PIL
+    PIL.Image.frombytes = PIL.Image.frombuffer
+    PIL.Image.Image.tobytes = PIL.Image.Image.tostring
+
 
 class ZBarCam(AnchorLayout):
     """
