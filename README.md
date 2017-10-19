@@ -18,10 +18,15 @@ BoxLayout:
 ```
 
 ## Install
+Install system requirements (Ubuntu 16.04):
+```
+sudo apt install libzbar-dev
+```
+Install zbarcam:
 ```
 pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 ```
-You may also need to compile OpenCV2 manually and deploy `cv2.so` to your `site-packages/`.
+You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 
 ## Credits
 I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).
