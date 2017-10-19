@@ -17,8 +17,6 @@ class ZBarRecipe(PythonRecipe):
 
     depends = ['hostpython2', 'python2', 'setuptools', 'libzbar']
 
-    sub_build_dir = False
-
     def get_recipe_env(self, arch=None, with_flags_in_cc=True):
         env = super(ZBarRecipe, self).get_recipe_env(arch, with_flags_in_cc)
         libzbar = self.get_recipe('libzbar', self.ctx)
