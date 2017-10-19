@@ -1,3 +1,4 @@
+import os
 from pythonforandroid.toolchain import shprint, current_directory
 from pythonforandroid.recipe import Recipe
 from multiprocessing import cpu_count
@@ -14,10 +15,15 @@ class LibZBarRecipe(Recipe):
 
     patches = ["werror.patch"]
 
+    def get_recipe_env(self, arch=None, with_flags_in_cc=True):
+         env = super(LibZBarRecipe, self).get_recipe_env(arch, with_flags_in_cc)
+         libiconv = self.get_recipe('libiconv', self.ctx)
+         libiconv_dir = libiconv.get_build_dir(arch.arch)
+         env['CFLAGS'] += ' -I' + os.path.join(libiconv_dir, 'include')
+         return env
+
     def build_arch(self, arch):
-        # TODO:
-        # - handle libiconv:
-        #   https://sourceforge.net/p/zbar/discussion/664595/thread/fcf39edc/
+        # https://sourceforge.net/p/zbar/discussion/664595/thread/fcf39edc/
         super(LibZBarRecipe, self).build_arch(arch)
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
@@ -39,7 +45,6 @@ class LibZBarRecipe(Recipe):
                 '--enable-shared=no',
                 _env=env)
             shprint(sh.make, '-j' + str(cpu_count()), _env=env)
-            assert False
             libs = ['.libs/libzbar.so']
             self.install_libs(arch, *libs)
 
