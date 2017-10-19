@@ -20,18 +20,18 @@ class LibZBarRecipe(Recipe):
                 os.path.join(self.ctx.get_libs_dir(arch.arch), 'libzbar.so'))
 
     def get_recipe_env(self, arch=None, with_flags_in_cc=True):
-         env = super(LibZBarRecipe, self).get_recipe_env(arch, with_flags_in_cc)
-         libiconv = self.get_recipe('libiconv', self.ctx)
-         libiconv_dir = libiconv.get_build_dir(arch.arch)
-         env['CFLAGS'] += ' -I' + os.path.join(libiconv_dir, 'include')
-         # TODO
-         env['LDSHARED'] = env['CC'] + \
+        env = super(LibZBarRecipe, self).get_recipe_env(arch, with_flags_in_cc)
+        libiconv = self.get_recipe('libiconv', self.ctx)
+        libiconv_dir = libiconv.get_build_dir(arch.arch)
+        env['CFLAGS'] += ' -I' + os.path.join(libiconv_dir, 'include')
+        # TODO
+        env['LDSHARED'] = env['CC'] + \
             ' -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
-         # env['LDFLAGS'] += ' -L{}'.format(libiconv_dir)
-         # TODO: hardcoded Python version
-         # env['LDFLAGS'] += " -landroid -lpython2.7 -lsecp256k1"
-         env['LDFLAGS'] += " -landroid -liconv"
-         return env
+        # env['LDFLAGS'] += ' -L{}'.format(libiconv_dir)
+        # TODO: hardcoded Python version
+        # env['LDFLAGS'] += " -landroid -lpython2.7 -lsecp256k1"
+        env['LDFLAGS'] += " -landroid -liconv"
+        return env
 
     def build_arch(self, arch):
         # https://sourceforge.net/p/zbar/discussion/664595/thread/fcf39edc/
