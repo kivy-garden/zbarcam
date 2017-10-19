@@ -28,8 +28,6 @@ class LibZBarRecipe(Recipe):
         env['LDSHARED'] = env['CC'] + \
             ' -pthread -shared -Wl,-O1 -Wl,-Bsymbolic-functions'
         # env['LDFLAGS'] += ' -L{}'.format(libiconv_dir)
-        # TODO: hardcoded Python version
-        # env['LDFLAGS'] += " -landroid -lpython2.7 -lsecp256k1"
         env['LDFLAGS'] += " -landroid -liconv"
         return env
 
