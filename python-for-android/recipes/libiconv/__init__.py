@@ -6,11 +6,11 @@ import sh
 
 class LibIconvRecipe(Recipe):
 
-    version = '1.14'
+    version = '1.15'
 
     url = 'https://ftp.gnu.org/pub/gnu/libiconv/libiconv-{version}.tar.gz'
 
-    patches = ['libiconv-1.14-no-gets.patch']
+    patches = ['libiconv-1.15-no-gets.patch']
 
     def build_arch(self, arch):
         super(LibIconvRecipe, self).build_arch(arch)
@@ -22,8 +22,7 @@ class LibIconvRecipe(Recipe):
                 '--prefix=' + self.ctx.get_python_install_dir(),
                 _env=env)
             shprint(sh.make, '-j' + str(cpu_count()), _env=env)
-            assert False
-            libs = ['.libs/libzbar.so']
+            libs = ['lib/.libs/libiconv.so']
             self.install_libs(arch, *libs)
 
 
