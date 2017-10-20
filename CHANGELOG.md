@@ -3,6 +3,7 @@
 ## [Unreleased]
 
   - Add Android autofocus, refs #2
+  - Fix Android rotation, refs #3
 
 ## [20171019]
 

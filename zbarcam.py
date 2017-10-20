@@ -111,10 +111,20 @@ class ZBarCam(AnchorLayout):
 
 
 DEMO_APP_KV_LANG = """
+#:import platform kivy.utils.platform
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+        # Android camera rotation workaround, refs:
+        # https://github.com/AndreMiras/garden.zbarcam/issues/3
+		canvas.before:
+            PushMatrix
+            Rotate:
+                angle: -90 if platform == 'android' else 0
+                origin: self.center
+		canvas.after:
+            PopMatrix
     Label:
         size_y: 20
         size_hint_y: None

@@ -36,7 +36,6 @@ pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 
 ## Current limitations
-  * Camera image rotated [#3](https://github.com/AndreMiras/garden.zbarcam/issues/3)
   * Upstream recipes integration [kivy/python-for-android#1145](https://github.com/kivy/python-for-android/pull/1145)
 
 ## Troubleshooting
