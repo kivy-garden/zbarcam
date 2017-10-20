@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20171020]
 
   - Add Android autofocus, refs #2
   - Fix Android rotation, refs #3
