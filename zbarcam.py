@@ -3,11 +3,11 @@ from collections import namedtuple
 import PIL
 import zbar
 from kivy.app import App
+from kivy.garden.xcamera import XCamera as Camera
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.utils import platform
-from kivy.garden.xcamera import XCamera as Camera
 
 # Pillow is not currently available for Android:
 # https://github.com/kivy/python-for-android/pull/786
