@@ -26,7 +26,7 @@ class ZBarCam(AnchorLayout):
     Widget that use the Camera and zbar to detect qrcode.
     When found, the `symbols` will be updated.
     """
-    camera_size = ListProperty([640, 480])
+    resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
 
@@ -37,9 +37,7 @@ class ZBarCam(AnchorLayout):
         super(ZBarCam, self).__init__(**kwargs)
         self._camera = Camera(
                 play=True,
-                resolution=self.camera_size,
-                size=self.camera_size,
-                size_hint=(None, None))
+                resolution=self.resolution)
         self._remove_shoot_button()
         self._enable_android_autofocus()
         self._camera._camera.bind(on_texture=self._on_texture)
@@ -116,6 +114,7 @@ BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+        allow_stretch: True
         # Android camera rotation workaround, refs:
         # https://github.com/AndreMiras/garden.zbarcam/issues/3
 		canvas.before:
@@ -126,8 +125,8 @@ BoxLayout:
 		canvas.after:
             PopMatrix
     Label:
-        size_y: 20
-        size_hint_y: None
+        size_hint: None, None
+        size: self.texture_size[0], 50
         text: ", ".join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
