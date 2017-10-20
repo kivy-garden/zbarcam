@@ -44,6 +44,7 @@ requirements = kivy, pil, libiconv, libzbar, zbar
 
 # (list) Garden requirements
 #garden_requirements =
+garden_requirements = xcamera
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
