@@ -22,10 +22,17 @@ Install system requirements (Ubuntu 16.04):
 ```
 sudo apt install libzbar-dev
 ```
+
+Install garden requirements:
+```
+garden install xcamera
+```
+
 Install zbarcam:
 ```
 pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 ```
+
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 
 ## Current limitations
