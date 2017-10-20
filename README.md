@@ -28,5 +28,12 @@ pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
 ```
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 
+## Troubleshooting
+
+### Android `ValueError: Empty module name`
+More likely an import issue in your `.kv` file.
+Try to `from zbarcam import ZBarCam` in your `main.py` to see the exact error.
+It's common to forget `pil` in `buildozer.spec` `requirements` section.
+
 ## Credits
 I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).
