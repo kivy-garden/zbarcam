@@ -41,12 +41,9 @@ class ZBarCam(AnchorLayout):
         self._remove_shoot_button()
         self._enable_android_autofocus()
         self._camera._camera.bind(on_texture=self._on_texture)
-        # TODO
         self.add_widget(self._camera)
         # create a scanner used for detecting qrcode
         self.scanner = zbar.ImageScanner()
-        # TODO
-        # self.start()
 
     def _remove_shoot_button(self):
         """
@@ -72,14 +69,11 @@ class ZBarCam(AnchorLayout):
         self._detect_qrcode_frame(
             instance=None, camera=instance, texture=instance.texture)
 
-    # TODO
     def start(self):
         self._camera.play = True
-        # self._camera.start()
 
-    # TODO
     def stop(self):
-        self._camera.stop()
+        self._camera.play = False
 
     def _detect_qrcode_frame(self, instance, camera, texture):
         image_data = texture.pixels
