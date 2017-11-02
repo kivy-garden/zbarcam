@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='zbarcam',
-      version='20171020',
+      version='20171102',
       description='Real time Barcode and QR Code scanner Edit',
       author='Andre Miras',
       url='https://github.com/AndreMiras/garden.zbarcam',
