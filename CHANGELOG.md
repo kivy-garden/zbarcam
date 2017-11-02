@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+  - Add camera start/stop
+
 ## [20171020]
 
   - Add Android autofocus, refs #2
