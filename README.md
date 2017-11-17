@@ -32,13 +32,10 @@ garden install xcamera
 
 Install zbarcam:
 ```
-pip install https://github.com/AndreMiras/garden.zbarcam/archive/develop.zip
+garden install zbarcam
 ```
 
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
-
-## Current limitations
-  * Upstream recipes integration [kivy/python-for-android#1145](https://github.com/kivy/python-for-android/pull/1145)
 
 ## Troubleshooting
 

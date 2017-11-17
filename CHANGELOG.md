@@ -1,5 +1,9 @@
 # Change Log
 
+## [20171117]
+
+  - Integrated to kivy-garden
+
 ## [20171102]
 
   - Add camera start/stop
