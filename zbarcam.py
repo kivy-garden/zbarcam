@@ -58,7 +58,7 @@ class ZBarCam(AnchorLayout):
         """
         Enables autofocus on Android.
         """
-        if platform != 'android':
+        if not self.is_android():
             return
         camera = self._camera._camera._android_camera
         params = camera.getParameters()
@@ -68,12 +68,6 @@ class ZBarCam(AnchorLayout):
     def _on_texture(self, instance):
         self._detect_qrcode_frame(
             instance=None, camera=instance, texture=instance.texture)
-
-    def start(self):
-        self._camera.play = True
-
-    def stop(self):
-        self._camera.play = False
 
     def _detect_qrcode_frame(self, instance, camera, texture):
         image_data = texture.pixels
@@ -101,23 +95,42 @@ class ZBarCam(AnchorLayout):
             symbols.append(qrcode)
         self.symbols = symbols
 
+    def start(self):
+        self._camera.play = True
+
+    def stop(self):
+        self._camera.play = False
+
+    def is_android(self):
+        return platform == 'android'
+
 
 DEMO_APP_KV_LANG = """
-#:import platform kivy.utils.platform
 BoxLayout:
     orientation: 'vertical'
-    ZBarCam:
-        id: zbarcam
-        allow_stretch: True
-        # Android camera rotation workaround, refs:
-        # https://github.com/AndreMiras/garden.zbarcam/issues/3
-		canvas.before:
-            PushMatrix
-            Rotate:
-                angle: -90 if platform == 'android' else 0
-                origin: self.center
-		canvas.after:
-            PopMatrix
+    Widget:
+        # invert width/height on rotated Android
+        # https://stackoverflow.com/a/45192295/185510
+        id: proxy
+        ZBarCam:
+            id: zbarcam
+            allow_stretch: True
+            keep_ratio: True
+            resolution: (640, 480)
+            center: self.size and proxy.center
+
+            size:
+                (proxy.height, proxy.width) if self.is_android() \
+                else (proxy.width, proxy.height)
+            # Android camera rotation workaround, refs:
+            # https://github.com/AndreMiras/garden.zbarcam/issues/3
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: -90 if self.is_android() else 0
+                    origin: self.center
+            canvas.after:
+                PopMatrix
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50

@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+ - Full screen camera
+
 ## [20171117]
 
   - Integrated to kivy-garden

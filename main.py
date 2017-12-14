@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Buildozer is only hooking with a `main.py` file.
 """
