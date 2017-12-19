@@ -3,7 +3,7 @@ from collections import namedtuple
 import PIL
 import zbar
 from kivy.app import App
-from kivy.garden.xcamera import XCamera as Camera
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
@@ -35,22 +35,25 @@ class ZBarCam(AnchorLayout):
 
     def __init__(self, **kwargs):
         super(ZBarCam, self).__init__(**kwargs)
-        self._camera = Camera(
-                play=True,
-                resolution=self.resolution)
+        Clock.schedule_once(lambda dt: self._setup())
+        # creates a scanner used for detecting qrcode
+        self.scanner = zbar.ImageScanner()
+
+    def _setup(self):
+        """
+        Postpones some setup tasks that require self.ids dictionary.
+        """
         self._remove_shoot_button()
         self._enable_android_autofocus()
-        self._camera._camera.bind(on_texture=self._on_texture)
-        self.add_widget(self._camera)
-        # create a scanner used for detecting qrcode
-        self.scanner = zbar.ImageScanner()
+        self.xcamera._camera.bind(on_texture=self._on_texture)
+        # self.add_widget(self.xcamera)
 
     def _remove_shoot_button(self):
         """
         Removes the "shoot button", see:
         https://github.com/kivy-garden/garden.xcamera/pull/3
         """
-        xcamera = self._camera
+        xcamera = self.xcamera
         shoot_button = xcamera.children[0]
         xcamera.remove_widget(shoot_button)
 
@@ -60,7 +63,7 @@ class ZBarCam(AnchorLayout):
         """
         if not self.is_android():
             return
-        camera = self._camera._camera._android_camera
+        camera = self.xcamera._camera._android_camera
         params = camera.getParameters()
         params.setFocusMode('continuous-video')
         camera.setParameters(params)
@@ -95,42 +98,27 @@ class ZBarCam(AnchorLayout):
             symbols.append(qrcode)
         self.symbols = symbols
 
+    @property
+    def xcamera(self):
+        return self.ids['xcamera']
+
     def start(self):
-        self._camera.play = True
+        self.xcamera.play = True
 
     def stop(self):
-        self._camera.play = False
+        self.xcamera.play = False
 
     def is_android(self):
         return platform == 'android'
 
 
+Builder.load_file("zbarcam.kv")
+
 DEMO_APP_KV_LANG = """
 BoxLayout:
     orientation: 'vertical'
-    Widget:
-        # invert width/height on rotated Android
-        # https://stackoverflow.com/a/45192295/185510
-        id: proxy
-        ZBarCam:
-            id: zbarcam
-            allow_stretch: True
-            keep_ratio: True
-            resolution: (640, 480)
-            center: self.size and proxy.center
-
-            size:
-                (proxy.height, proxy.width) if self.is_android() \
-                else (proxy.width, proxy.height)
-            # Android camera rotation workaround, refs:
-            # https://github.com/AndreMiras/garden.zbarcam/issues/3
-            canvas.before:
-                PushMatrix
-                Rotate:
-                    angle: -90 if self.is_android() else 0
-                    origin: self.center
-            canvas.after:
-                PopMatrix
+    ZBarCam:
+        id: zbarcam
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50

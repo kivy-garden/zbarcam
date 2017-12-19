@@ -3,6 +3,7 @@
 ## [Unreleased]
 
  - Full screen camera
+ - kvlang refactoring
 
 ## [20171117]
 
