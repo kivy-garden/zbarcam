@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20171220]
 
  - Full screen camera
  - Kvlang refactoring
