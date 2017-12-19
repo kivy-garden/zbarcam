@@ -1,5 +1,11 @@
 # Change Log
 
+## [20171220]
+
+ - Full screen camera
+ - Kvlang refactoring
+ - File tree refactoring
+
 ## [20171117]
 
   - Integrated to kivy-garden

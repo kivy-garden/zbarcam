@@ -1,9 +1,10 @@
+import os
 from collections import namedtuple
 
 import PIL
 import zbar
 from kivy.app import App
-from kivy.garden.xcamera import XCamera as Camera
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
@@ -20,6 +21,9 @@ except AttributeError:
     PIL.Image.frombytes = PIL.Image.frombuffer
     PIL.Image.Image.tobytes = PIL.Image.Image.tostring
 
+MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
+
 
 class ZBarCam(AnchorLayout):
     """
@@ -35,22 +39,25 @@ class ZBarCam(AnchorLayout):
 
     def __init__(self, **kwargs):
         super(ZBarCam, self).__init__(**kwargs)
-        self._camera = Camera(
-                play=True,
-                resolution=self.resolution)
+        Clock.schedule_once(lambda dt: self._setup())
+        # creates a scanner used for detecting qrcode
+        self.scanner = zbar.ImageScanner()
+
+    def _setup(self):
+        """
+        Postpones some setup tasks that require self.ids dictionary.
+        """
         self._remove_shoot_button()
         self._enable_android_autofocus()
-        self._camera._camera.bind(on_texture=self._on_texture)
-        self.add_widget(self._camera)
-        # create a scanner used for detecting qrcode
-        self.scanner = zbar.ImageScanner()
+        self.xcamera._camera.bind(on_texture=self._on_texture)
+        # self.add_widget(self.xcamera)
 
     def _remove_shoot_button(self):
         """
         Removes the "shoot button", see:
         https://github.com/kivy-garden/garden.xcamera/pull/3
         """
-        xcamera = self._camera
+        xcamera = self.xcamera
         shoot_button = xcamera.children[0]
         xcamera.remove_widget(shoot_button)
 
@@ -58,9 +65,9 @@ class ZBarCam(AnchorLayout):
         """
         Enables autofocus on Android.
         """
-        if platform != 'android':
+        if not self.is_android():
             return
-        camera = self._camera._camera._android_camera
+        camera = self.xcamera._camera._android_camera
         params = camera.getParameters()
         params.setFocusMode('continuous-video')
         camera.setParameters(params)
@@ -68,12 +75,6 @@ class ZBarCam(AnchorLayout):
     def _on_texture(self, instance):
         self._detect_qrcode_frame(
             instance=None, camera=instance, texture=instance.texture)
-
-    def start(self):
-        self._camera.play = True
-
-    def stop(self):
-        self._camera.play = False
 
     def _detect_qrcode_frame(self, instance, camera, texture):
         image_data = texture.pixels
@@ -101,23 +102,25 @@ class ZBarCam(AnchorLayout):
             symbols.append(qrcode)
         self.symbols = symbols
 
+    @property
+    def xcamera(self):
+        return self.ids['xcamera']
+
+    def start(self):
+        self.xcamera.play = True
+
+    def stop(self):
+        self.xcamera.play = False
+
+    def is_android(self):
+        return platform == 'android'
+
 
 DEMO_APP_KV_LANG = """
-#:import platform kivy.utils.platform
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
-        allow_stretch: True
-        # Android camera rotation workaround, refs:
-        # https://github.com/AndreMiras/garden.zbarcam/issues/3
-		canvas.before:
-            PushMatrix
-            Rotate:
-                angle: -90 if platform == 'android' else 0
-                origin: self.center
-		canvas.after:
-            PopMatrix
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
