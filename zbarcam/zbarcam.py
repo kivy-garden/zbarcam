@@ -1,3 +1,4 @@
+import os
 from collections import namedtuple
 
 import PIL
@@ -19,6 +20,9 @@ except AttributeError:
     # PIL
     PIL.Image.frombytes = PIL.Image.frombuffer
     PIL.Image.Image.tobytes = PIL.Image.Image.tostring
+
+MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
 
 
 class ZBarCam(AnchorLayout):
@@ -111,8 +115,6 @@ class ZBarCam(AnchorLayout):
     def is_android(self):
         return platform == 'android'
 
-
-Builder.load_file("zbarcam.kv")
 
 DEMO_APP_KV_LANG = """
 BoxLayout:

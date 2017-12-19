@@ -7,5 +7,6 @@ setup(name='zbarcam',
       description='Real time Barcode and QR Code scanner Edit',
       author='Andre Miras',
       url='https://github.com/AndreMiras/garden.zbarcam',
-      py_modules=['zbarcam'],
+      packages=['zbarcam'],
+      package_data={'zbarcam': ['*.kv']},
       install_requires=['zbar', 'kivy', 'pillow', 'numpy'])
