@@ -1,0 +1,13 @@
+sudo: required
+
+language: generic
+
+services:
+  - docker
+
+install:
+  - docker build --tag=zbarcam .
+
+script:
+  - docker run zbarcam
+    /bin/sh -c '. venv/bin/activate && make test'

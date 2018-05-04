@@ -1,5 +1,7 @@
 # garden.zbarcam
 
+[![Build Status](https://secure.travis-ci.org/kivy-garden/garden.zbarcam.png?branch=develop)](http://travis-ci.org/kivy-garden/garden.zbarcam)
+
 Real time Barcode and QR Code scanner using the camera.
 It's built on top of [Kivy](https://github.com/kivy/kivy) and [ZBar](https://github.com/ZBar/ZBar).
 
