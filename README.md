@@ -39,6 +39,12 @@ You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md)
 
 ## Troubleshooting
 
+### Install `Unable to import package 'kivy.garden.xcamera.XCamera'`
+Missing the `xcamera` dependency, install it with:
+```
+garden install xcamera
+```
+
 ### Android `ValueError: Empty module name`
 More likely an import issue in your `.kv` file.
 Try to `from zbarcam import ZBarCam` in your `main.py` to see the exact error.
