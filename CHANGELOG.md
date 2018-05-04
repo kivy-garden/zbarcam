@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+ - Provide Makefile, refs #15
+
 ## [20171220]
 
  - Full screen camera

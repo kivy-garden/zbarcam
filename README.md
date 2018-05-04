@@ -37,6 +37,16 @@ garden install zbarcam
 
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 
+## Contribute
+To play with the project, install system dependencies and Python requirements using the [Makefile](Makefile).
+```
+make
+```
+Then verify everything is OK by running tests.
+```
+make tests
+```
+
 ## Troubleshooting
 
 ### Android `ValueError: Empty module name`
