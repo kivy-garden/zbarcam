@@ -5,7 +5,7 @@ TOX=`. $(ACTIVATE_PATH); which tox`
 GARDEN=`. $(ACTIVATE_PATH); which garden`
 PYTHON=$(VENV_NAME)/bin/python
 SYSTEM_DEPENDENCIES=virtualenv build-essential libpython2.7-dev libsdl2-dev libzbar-dev \
-	cmake python-numpy tox
+	cmake python-numpy tox wget curl
 OS=$(shell lsb_release -si)
 OPENCV_VERSION=2.4.13.6
 OPENCV_BASENAME=opencv-$(OPENCV_VERSION)
@@ -28,8 +28,8 @@ ifeq ($(OS), Ubuntu)
 endif
 
 $(OPENCV_BUILD):
-	wget --continue https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
-		--output-document $(OPENCV_BASENAME).tar.gz
+	curl --location https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
+		--progress-bar --output $(OPENCV_BASENAME).tar.gz
 	tar -xvf $(OPENCV_BASENAME).tar.gz
 	cmake -DBUILD_opencv_python=ON -B$(OPENCV_BASENAME)/build -H$(OPENCV_BASENAME)
 	cmake --build $(OPENCV_BASENAME)/build -- -j4
