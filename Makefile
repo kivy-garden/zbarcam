@@ -5,7 +5,7 @@ TOX=`. $(ACTIVATE_PATH); which tox`
 GARDEN=`. $(ACTIVATE_PATH); which garden`
 PYTHON=$(VENV_NAME)/bin/python
 SYSTEM_DEPENDENCIES=virtualenv build-essential libpython2.7-dev libsdl2-dev libzbar-dev \
-	cmake python-numpy tox
+	cmake python-numpy tox wget
 OS=$(shell lsb_release -si)
 OPENCV_VERSION=2.4.13.6
 OPENCV_BASENAME=opencv-$(OPENCV_VERSION)
