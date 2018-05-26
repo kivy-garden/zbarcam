@@ -4,6 +4,7 @@
 
  - Provide Makefile, refs #15
  - Setup continuous integration testing, refs #6, #14
+ - Speedup OpenCV compilation time, refs #16
 
 ## [20171220]
 

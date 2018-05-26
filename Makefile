@@ -31,7 +31,7 @@ endif
 $(OPENCV_BUILD):
 	curl --location https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
 		--progress-bar --output $(OPENCV_BASENAME).tar.gz
-	tar -xvf $(OPENCV_BASENAME).tar.gz
+	tar -xf $(OPENCV_BASENAME).tar.gz
 	cmake \
 		-D BUILD_DOCS=OFF -D BUILD_PACKAGE=OFF -D BUILD_PERF_TESTS=OFF \
 		-D BUILD_TESTS=OFF -D BUILD_opencv_apps=OFF \
