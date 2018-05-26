@@ -5,9 +5,13 @@ language: generic
 services:
   - docker
 
+env:
+  - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='. venv/bin/activate && make test'
+  - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
+
 install:
-  - docker build --tag=zbarcam .
+  - docker build --tag=$TAG --file=$DOCKERFILE .
 
 script:
-  - docker run zbarcam
-    /bin/sh -c '. venv/bin/activate && make test'
+  # `travis_wait` also adds quotes, so we need to escape ours
+  - travis_wait docker run $TAG /bin/sh -c \"$COMMAND\"

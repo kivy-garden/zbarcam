@@ -3,7 +3,7 @@
 ## [Unreleased]
 
  - Provide Makefile, refs #15
- - Setup continuous integration testing, refs #6
+ - Setup continuous integration testing, refs #6, #14
 
 ## [20171220]
 

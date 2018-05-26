@@ -1,10 +1,10 @@
 # Docker image for installing dependencies on Linux and running tests.
 # Build with:
-# docker build --tag=zbarcam .
+# docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
 # Run with:
-# docker run zbarcam /bin/sh -c '. venv/bin/activate && make test'
+# docker run zbarcam-linux /bin/sh -c '. venv/bin/activate && make test'
 # Or for interactive shell:
-# docker run -it --rm zbarcam
+# docker run -it --rm zbarcam-linux
 # TODO:
 #	- delete archives to keep small the container small
 #	- setup caching (for apt, and pip)
