@@ -1,6 +1,6 @@
 # Docker image for installing dependencies on Linux and running tests.
 # Build with:
-# docker build --tag=zbarcam-linux .
+# docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
 # Run with:
 # docker run zbarcam-linux /bin/sh -c '. venv/bin/activate && make test'
 # Or for interactive shell:
