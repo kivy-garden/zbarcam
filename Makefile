@@ -11,6 +11,7 @@ OPENCV_VERSION=2.4.13.6
 OPENCV_BASENAME=opencv-$(OPENCV_VERSION)
 OPENCV_BUILD=$(OPENCV_BASENAME)/build/lib/cv2.so
 OPENCV_DEPLOY=$(VENV_NAME)/lib/python2.7/site-packages/cv2.so
+NPROC=`grep -c '^processor' /proc/cpuinfo`
 
 
 all: system_dependencies opencv virtualenv
@@ -30,9 +31,17 @@ endif
 $(OPENCV_BUILD):
 	curl --location https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
 		--progress-bar --output $(OPENCV_BASENAME).tar.gz
-	tar -xvf $(OPENCV_BASENAME).tar.gz
-	cmake -DBUILD_opencv_python=ON -B$(OPENCV_BASENAME)/build -H$(OPENCV_BASENAME)
-	cmake --build $(OPENCV_BASENAME)/build -- -j4
+	tar -xf $(OPENCV_BASENAME).tar.gz
+	cmake \
+		-D BUILD_DOCS=OFF -D BUILD_PACKAGE=OFF -D BUILD_PERF_TESTS=OFF \
+		-D BUILD_TESTS=OFF -D BUILD_opencv_apps=OFF \
+		-D BUILD_opencv_nonfree=OFF -D BUILD_opencv_stitching=OFF \
+		-D BUILD_opencv_superres=OFF -D BUILD_opencv_ts=OFF \
+		-D BUILD_WITH_DEBUG_INFO=OFF -D WITH_1394=OFF -D WITH_CUDA=OFF \
+		-D WITH_CUFFT=OFF -D WITH_GIGEAPI=OFF -D WITH_JASPER=OFF \
+		-D WITH_OPENEXR=OFF -D WITH_PVAPI=OFF -D WITH_GTK=OFF \
+		-D BUILD_opencv_python=ON -B$(OPENCV_BASENAME)/build -H$(OPENCV_BASENAME)
+	cmake --build $(OPENCV_BASENAME)/build -- -j$(NPROC)
 
 opencv_build: $(OPENCV_BUILD)
 
