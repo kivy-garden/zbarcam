@@ -10,11 +10,13 @@ It's built on top of [Kivy](https://github.com/kivy/kivy) and [ZbarLight](https:
 ## How to use
 Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
 ```
-#:import ZBarCam zbarcam
+#:import ZBarCam kivy.garden.zbarcam
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+        # optional, by default checks all types
+        code_types: 'qrcode', 'ean13'
     Label:
         size_y: 20
         size_hint_y: None

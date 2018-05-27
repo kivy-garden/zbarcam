@@ -34,6 +34,8 @@ class ZBarCam(AnchorLayout):
 
     symbols = ListProperty([])
     Symbol = namedtuple('Symbol', ['type', 'data'])
+    # checking all possible types by default
+    code_types = ListProperty(zbarlight.Symbologies.keys())
 
     # TODO: handle code types
     def __init__(self, **kwargs):
@@ -78,13 +80,15 @@ class ZBarCam(AnchorLayout):
         size = texture.size
         fmt = texture.colorfmt.upper()
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        # TODO: hardcoded, make it configurable
-        code_type = 'qrcode'
-        codes = zbarlight.scan_codes(code_type, pil_image) or []
+        # calling `zbarlight.scan_codes()` for every single `code_type`,
+        # zbarlight doesn't yet provide a more efficient way to do this, see:
+        # https://github.com/Polyconseil/zbarlight/issues/23
         symbols = []
-        for code in codes:
-            symbol = ZBarCam.Symbol(type=code_type, data=code)
-            symbols.append(symbol)
+        for code_type in self.code_types:
+            codes = zbarlight.scan_codes(code_type, pil_image) or []
+            for code in codes:
+                symbol = ZBarCam.Symbol(type=code_type, data=code)
+                symbols.append(symbol)
         self.symbols = symbols
 
     @property
@@ -106,10 +110,11 @@ BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+        code_types: 'qrcode', 'ean13'
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
-        text: ", ".join([str(symbol.data) for symbol in zbarcam.symbols])
+        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
 
