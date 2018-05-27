@@ -6,7 +6,7 @@ services:
   - docker
 
 env:
-  - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='. venv/bin/activate && make test'
+  - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make test'
   - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
 
 install:
