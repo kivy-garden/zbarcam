@@ -9,7 +9,7 @@ It's built on top of [Kivy](https://github.com/kivy/kivy) and [ZbarLight](https:
 
 ## How to use
 Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
-```
+```yaml
 #:import ZBarCam kivy.garden.zbarcam
 BoxLayout:
     orientation: 'vertical'
@@ -25,17 +25,17 @@ BoxLayout:
 
 ## Install
 Install system requirements (Ubuntu 16.04):
-```
+```sh
 sudo apt install libzbar-dev
 ```
 
 Install garden requirements:
-```
+```sh
 garden install xcamera
 ```
 
 Install zbarcam:
-```
+```sh
 garden install zbarcam
 ```
 
@@ -43,19 +43,19 @@ You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md)
 
 ## Contribute
 To play with the project, install system dependencies and Python requirements using the [Makefile](Makefile).
-```
+```sh
 make
 ```
 Then verify everything is OK by running tests.
-```
-make tests
+```sh
+make test
 ```
 
 ## Troubleshooting
 
 ### Install `Unable to import package 'kivy.garden.xcamera.XCamera'`
 Missing the `xcamera` dependency, install it with:
-```
+```sh
 garden install xcamera
 ```
 
