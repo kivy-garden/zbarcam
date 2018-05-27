@@ -2,7 +2,7 @@ import os
 from collections import namedtuple
 
 import PIL
-import zbar
+import zbarlight
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -33,15 +33,12 @@ class ZBarCam(AnchorLayout):
     resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
+    Symbol = namedtuple('Symbol', ['type', 'data'])
 
-    Qrcode = namedtuple(
-            'Qrcode', ['type', 'data', 'bounds', 'quality', 'count'])
-
+    # TODO: handle code types
     def __init__(self, **kwargs):
         super(ZBarCam, self).__init__(**kwargs)
         Clock.schedule_once(lambda dt: self._setup())
-        # creates a scanner used for detecting qrcode
-        self.scanner = zbar.ImageScanner()
 
     def _setup(self):
         """
@@ -81,25 +78,13 @@ class ZBarCam(AnchorLayout):
         size = texture.size
         fmt = texture.colorfmt.upper()
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        # convert to greyscale; since zbar only works with it
-        pil_image = pil_image.convert('L')
-        width, height = pil_image.size
-        raw_image = pil_image.tobytes()
-        zimage = zbar.Image(width, height, "Y800", raw_image)
-        result = self.scanner.scan(zimage)
-        if result == 0:
-            self.symbols = []
-            return
-        # we detected qrcode extract and dispatch them
+        # TODO: hardcoded, make it configurable
+        code_type = 'qrcode'
+        codes = zbarlight.scan_codes(code_type, pil_image) or []
         symbols = []
-        for symbol in zimage:
-            qrcode = ZBarCam.Qrcode(
-                type=symbol.type,
-                data=symbol.data,
-                quality=symbol.quality,
-                count=symbol.count,
-                bounds=None)
-            symbols.append(qrcode)
+        for code in codes:
+            symbol = ZBarCam.Symbol(type=code_type, data=code)
+            symbols.append(symbol)
         self.symbols = symbols
 
     @property
