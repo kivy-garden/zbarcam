@@ -5,6 +5,7 @@
  - Provide Makefile, refs #15
  - Setup continuous integration testing, refs #6, #14
  - Speedup OpenCV compilation time, refs #16
+ - Migrated to zbarlight, refs #5, #13
 
 ## [20171220]
 
