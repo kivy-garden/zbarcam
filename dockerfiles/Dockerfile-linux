@@ -2,7 +2,9 @@
 # Build with:
 # docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
 # Run with:
-# docker run zbarcam-linux /bin/sh -c '. venv/bin/activate && make test'
+# docker run zbarcam-linux /bin/sh -c 'make test'
+# Or using the entry point shortcut:
+# docker run zbarcam-linux 'make test'
 # Or for interactive shell:
 # docker run -it --rm zbarcam-linux
 # TODO:
@@ -25,3 +27,4 @@ RUN apt update -qq > /dev/null && apt install --yes --no-install-recommends \
 WORKDIR /app
 COPY . /app
 RUN make
+ENTRYPOINT ["./dockerfiles/start.sh"]

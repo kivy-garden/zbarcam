@@ -3,6 +3,8 @@
 # docker build --tag=zbarcam-android --file=dockerfiles/Dockerfile-android .
 # Run with:
 # docker run zbarcam-android /bin/sh -c 'buildozer android debug'
+# Or using the entry point shortcut:
+# docker run zbarcam-android 'buildozer android debug'
 # Or for interactive shell:
 # docker run -it --rm zbarcam-android
 FROM ubuntu:18.04
@@ -61,3 +63,4 @@ RUN mkdir -p ${HOME}/.buildozer/android/platform
 RUN ln -sfn ${HOME}/.android ${HOME}/.buildozer/android/platform/android-sdk-20
 
 COPY . ${WORK_DIR}
+ENTRYPOINT ["./dockerfiles/start.sh"]

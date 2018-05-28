@@ -13,5 +13,4 @@ install:
   - docker build --tag=$TAG --file=$DOCKERFILE .
 
 script:
-  # `travis_wait` also adds quotes, so we need to escape ours
-  - travis_wait docker run $TAG /bin/sh -c \"$COMMAND\"
+  - travis_wait docker run $TAG $COMMAND
