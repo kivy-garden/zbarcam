@@ -121,6 +121,12 @@ android.permissions = CAMERA
 # when an update is due and you just want to test/build your package
 # android.skip_update = False
 
+# (bool) If True, then automatically accept SDK license
+# agreements. This is intended for automation only. If set to False,
+# the default, you will be shown the license when first running
+# buildozer.
+android.accept_sdk_license = True
+
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
 

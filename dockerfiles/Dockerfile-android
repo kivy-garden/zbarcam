@@ -16,9 +16,6 @@ ENV WORK_DIR="${HOME_DIR}" \
 ENV DOCKERFILES_VERSION="master" \
     DOCKERFILES_URL="https://raw.githubusercontent.com/AndreMiras/dockerfiles"
 ENV MAKEFILES_URL="${DOCKERFILES_URL}/${DOCKERFILES_VERSION}/buildozer_android_new"
-# currently needed because buildozer still uses `tools/android` binary
-# even though we have the new `tools/bin/sdkmanager` available
-ENV USE_SDK_WRAPPER=true
 
 
 # configure locale
@@ -30,13 +27,14 @@ ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
 
 # install system dependencies (required to setup all the tools)
-RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends \
-    make curl ca-certificates xz-utils unzip openjdk-8-jdk sudo python-pip \
-    python-setuptools
+RUN apt install -qq --yes --no-install-recommends \
+    cmake make curl ca-certificates xz-utils unzip openjdk-8-jdk sudo \
+    python-pip python-setuptools zip
 
 # install build dependencies (required to successfully build the project)
 # TODO: should this go to a Makefile instead so it can be shared/reused?
 RUN apt install -qq --yes --no-install-recommends \
+    python3.6 libpython3.6-dev python3-setuptools \
     file autoconf automake libtool gettext pkg-config
 
 # prepare non root env
@@ -48,19 +46,11 @@ RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 USER ${USER}
 WORKDIR ${WORK_DIR}
 
-# downloads and installs Android SDK
-# makes sure to have an up to date build-tools version to workaround buildozer bug, see:
-# https://github.com/kivy/buildozer/commit/83ad94d#r29065648
-RUN curl --location --progress-bar ${MAKEFILES_URL}/android_sdk.mk --output android_sdk.mk
-RUN make -f android_sdk.mk
-
 # install buildozer and dependencies
 RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk
 RUN make -f buildozer.mk
-
-# links SDK to where buildozer is expecting to see it
-RUN mkdir -p ${HOME}/.buildozer/android/platform
-RUN ln -sfn ${HOME}/.android ${HOME}/.buildozer/android/platform/android-sdk-20
+# enforces buildozer master (afebba5) until next release
+RUN pip install --upgrade https://github.com/kivy/buildozer/archive/afebba5.zip
 
 COPY . ${WORK_DIR}
 ENTRYPOINT ["./dockerfiles/start.sh"]
