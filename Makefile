@@ -55,3 +55,7 @@ clean:
 
 test:
 	$(TOX)
+
+uitest: virtualenv
+	. $(ACTIVATE_PATH) && \
+    $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/
