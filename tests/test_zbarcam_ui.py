@@ -1,16 +1,7 @@
-import os
-import shutil
-import threading
 import time
 import unittest
 from functools import partial
-from tempfile import mkdtemp
-# from unittest import mock
-# 
-# from hexbytes import HexBytes
 from kivy.clock import Clock
-# from requests.exceptions import ConnectionError
-# 
 from zbarcam.zbarcam import DemoApp, ZBarCam
 
 
@@ -45,7 +36,7 @@ class UITestCase(unittest.TestCase):
         self.helper_test_open_application(app)
         # Comment out if you are editing the test, it'll leave the
         # Window opened.
-        # app.stop()
+        app.stop()
 
     # same named function as the filename(!)
     def test_ui_base(self):
