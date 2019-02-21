@@ -22,7 +22,6 @@ except AttributeError:
     PIL.Image.Image.tobytes = PIL.Image.Image.tostring
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
 
 
 class ZBarCam(AnchorLayout):
@@ -39,6 +38,9 @@ class ZBarCam(AnchorLayout):
 
     # TODO: handle code types
     def __init__(self, **kwargs):
+        # lazy loading the kv file rather than loading at module level,
+        # that way the `XCamera` import doesn't happen too early
+        Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
         super(ZBarCam, self).__init__(**kwargs)
         Clock.schedule_once(lambda dt: self._setup())
 
