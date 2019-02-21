@@ -1,6 +1,8 @@
+import os
 import time
 import unittest
 from functools import partial
+import mock
 from kivy.clock import Clock
 from zbarcam.zbarcam import DemoApp, ZBarCam
 
@@ -21,6 +23,17 @@ class UITestCase(unittest.TestCase):
         for i in range(count):
             EventLoop.idle()
 
+    @staticmethod
+    def get_camera_class():
+        """
+        Continuous integration providers don't have a camera available.
+        """
+        if os.environ.get('CI', False):
+            Camera = None
+        else:
+            from kivy.core.camera import Camera
+        return Camera
+
     def helper_test_open_application(self, app):
         """
         Makes sure the ZBarCam widget is rendered, hence the application
@@ -40,10 +53,13 @@ class UITestCase(unittest.TestCase):
 
     # same named function as the filename(!)
     def test_ui_base(self):
-        app = DemoApp()
-        p = partial(self.run_test, app)
-        Clock.schedule_once(p, 0.000001)
-        app.run()
+        # uses the `wraps` parameter to conditionally enable/disable mock
+        Camera = self.get_camera_class()
+        with mock.patch('kivy.core.camera.Camera', wraps=Camera):
+            app = DemoApp()
+            p = partial(self.run_test, app)
+            Clock.schedule_once(p, 0.000001)
+            app.run()
 
 
 if __name__ == '__main__':
