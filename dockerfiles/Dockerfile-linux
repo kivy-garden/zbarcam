@@ -1,16 +1,20 @@
 # Docker image for installing dependencies on Linux and running tests.
 # Build with:
-# docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
+#   docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
 # Run with:
 # docker run zbarcam-linux /bin/sh -c 'make test'
 # Or using the entry point shortcut:
-# docker run zbarcam-linux 'make test'
+#   docker run zbarcam-linux 'make test'
+# For running UI:
+#   xhost +"local:docker@"
+#   docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix zbarcam-linux 'make uitest'
 # Or for interactive shell:
-# docker run -it --rm zbarcam-linux
-# TODO:
-#	- delete archives to keep small the container small
-#	- setup caching (for apt, and pip)
+#   docker run -it --rm zbarcam-linux
 FROM ubuntu:18.04
+
+ENV USER="user"
+ENV HOME_DIR="/home/${USER}"
+ENV WORK_DIR="${HOME_DIR}"
 
 # configure locale
 RUN apt update -qq > /dev/null && apt install --yes --no-install-recommends \
@@ -21,10 +25,24 @@ ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
 
 # install system dependencies
-RUN apt update -qq > /dev/null && apt install --yes --no-install-recommends \
-    make lsb-release sudo
+RUN apt install --yes --no-install-recommends \
+    python python-dev virtualenv make lsb-release pkg-config build-essential \
+    sudo tox
 
-WORKDIR /app
-COPY . /app
+# install kivy system dependencies
+# https://kivy.org/docs/installation/installation-linux.html#dependencies-with-sdl2
+RUN apt install --yes --no-install-recommends \
+    libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+
+# prepare non root env
+RUN useradd --create-home --shell /bin/bash ${USER}
+# with sudo access and no password
+RUN usermod -append --groups sudo ${USER}
+RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+USER ${USER}
+WORKDIR ${WORK_DIR}
+COPY . ${WORK_DIR}
+
 RUN make
 ENTRYPOINT ["./dockerfiles/start.sh"]

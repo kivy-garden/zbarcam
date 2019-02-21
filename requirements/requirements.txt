@@ -1,7 +1,5 @@
 zbarlight==1.2
-# on Ubuntu 18.04 Bionic, the compile error related to `MIX_INIT_MOD` is fixed by installing:
-https://github.com/kivy/kivy/archive/d8ef8c2834293098bc404c0432049b2761f9b721.zip#egg=kivy
-# Kivy==1.10.0
+Kivy==1.10.1
 Kivy-Garden==0.1.4
 Pillow==4.3.0
 numpy==1.13.3
