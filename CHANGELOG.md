@@ -3,6 +3,7 @@
 ## [Unreleased]
 
   - Fix zbarlight dependency in setup.py, refs #28
+  - Migrate to zbarlight 2.1, refs #18
 
 ## [20190222]
 
