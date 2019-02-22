@@ -38,7 +38,7 @@ version.filename = %(source.dir)s/zbarcam/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy, pil, libiconv, libzbar, zbarlight==1.2
+requirements = kivy, pil, libiconv, libzbar, zbarlight>=2.2
 
 
 # (str) Custom source folders for requirements

@@ -74,10 +74,11 @@ class ZBarCam(AnchorLayout):
         camera.setParameters(params)
 
     def _on_texture(self, instance):
-        self._detect_qrcode_frame(
-            instance=None, camera=instance, texture=instance.texture)
+        self.symbols = self._detect_qrcode_frame(
+            texture=instance.texture, code_types=self.code_types)
 
-    def _detect_qrcode_frame(self, instance, camera, texture):
+    @staticmethod
+    def _detect_qrcode_frame(texture, code_types):
         image_data = texture.pixels
         size = texture.size
         fmt = texture.colorfmt.upper()
@@ -91,12 +92,12 @@ class ZBarCam(AnchorLayout):
         # zbarlight doesn't yet provide a more efficient way to do this, see:
         # https://github.com/Polyconseil/zbarlight/issues/23
         symbols = []
-        for code_type in self.code_types:
-            codes = zbarlight.scan_codes(code_type, pil_image) or []
+        for code_type in code_types:
+            codes = zbarlight.scan_codes([code_type], pil_image) or []
             for code in codes:
                 symbol = ZBarCam.Symbol(type=code_type, data=code)
                 symbols.append(symbol)
-        self.symbols = symbols
+        return symbols
 
     @property
     def xcamera(self):
