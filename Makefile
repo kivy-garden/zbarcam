@@ -1,8 +1,7 @@
 VENV_NAME=venv
-ACTIVATE_PATH=$(VENV_NAME)/bin/activate
-PIP=`. $(ACTIVATE_PATH); which pip`
+PIP=$(VENV_NAME)/bin/pip
 TOX=`which tox`
-GARDEN=`. $(ACTIVATE_PATH); which garden`
+GARDEN=$(VENV_NAME)/bin/garden
 PYTHON=$(VENV_NAME)/bin/python
 SYSTEM_DEPENDENCIES=virtualenv build-essential libpython2.7-dev libsdl2-dev libzbar-dev \
 	cmake python-numpy tox wget curl
@@ -57,5 +56,5 @@ test:
 	$(TOX)
 
 uitest: virtualenv
-	. $(ACTIVATE_PATH) && \
-    $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/
+	$(PIP) install -r requirements/test_requirements.txt
+	$(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/
