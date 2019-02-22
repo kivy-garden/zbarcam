@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20190223]
 
   - Fix zbarlight dependency in setup.py, refs #28
   - Migrate to zbarlight 2.1, refs #18
