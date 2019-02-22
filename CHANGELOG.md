@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20190222]
 
  - Provide Makefile, refs #15
  - Setup continuous integration testing, refs #6, #14
