@@ -1,4 +1,4 @@
-zbarlight==1.2
+zbarlight==2.2
 Kivy==1.10.1
 Kivy-Garden==0.1.4
 Pillow==4.3.0

@@ -57,4 +57,4 @@ test:
 
 uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
-	$(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/
+	$(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
