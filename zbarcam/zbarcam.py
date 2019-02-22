@@ -1,5 +1,4 @@
 import os
-from collections import namedtuple
 
 import PIL
 import zbarlight
@@ -27,12 +26,11 @@ MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 class ZBarCam(AnchorLayout):
     """
     Widget that use the Camera and zbar to detect qrcode.
-    When found, the `symbols` will be updated.
+    When found, the `codes` will be updated.
     """
     resolution = ListProperty([640, 480])
 
-    symbols = ListProperty([])
-    Symbol = namedtuple('Symbol', ['type', 'data'])
+    codes = ListProperty([])
     # checking all possible types by default
     code_types = ListProperty(zbarlight.Symbologies.keys())
 
@@ -74,10 +72,11 @@ class ZBarCam(AnchorLayout):
         camera.setParameters(params)
 
     def _on_texture(self, instance):
-        self._detect_qrcode_frame(
-            instance=None, camera=instance, texture=instance.texture)
+        self.codes = self._detect_qrcode_frame(
+            texture=instance.texture, code_types=self.code_types)
 
-    def _detect_qrcode_frame(self, instance, camera, texture):
+    @staticmethod
+    def _detect_qrcode_frame(texture, code_types):
         image_data = texture.pixels
         size = texture.size
         fmt = texture.colorfmt.upper()
@@ -87,16 +86,7 @@ class ZBarCam(AnchorLayout):
         if platform == 'ios' and fmt == 'BGRA':
             fmt = 'RGBA'
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        # calling `zbarlight.scan_codes()` for every single `code_type`,
-        # zbarlight doesn't yet provide a more efficient way to do this, see:
-        # https://github.com/Polyconseil/zbarlight/issues/23
-        symbols = []
-        for code_type in self.code_types:
-            codes = zbarlight.scan_codes(code_type, pil_image) or []
-            for code in codes:
-                symbol = ZBarCam.Symbol(type=code_type, data=code)
-                symbols.append(symbol)
-        self.symbols = symbols
+        return zbarlight.scan_codes(code_types, pil_image) or []
 
     @property
     def xcamera(self):
@@ -121,7 +111,7 @@ BoxLayout:
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
-        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
+        text: ', '.join([str(code) for code in zbarcam.codes])
 """
 
 
