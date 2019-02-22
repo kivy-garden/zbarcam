@@ -28,15 +28,18 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+# version = 0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
+version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
+version.filename = %(source.dir)s/zbarcam/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy, pil, libiconv, libzbar, zbar
+requirements = kivy, pil, libiconv, libzbar, zbarlight==1.2
+
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -118,6 +121,12 @@ android.permissions = CAMERA
 # when an update is due and you just want to test/build your package
 # android.skip_update = False
 
+# (bool) If True, then automatically accept SDK license
+# agreements. This is intended for automation only. If set to False,
+# the default, you will be shown the license when first running
+# buildozer.
+android.accept_sdk_license = True
+
 # (str) Android entry point, default is ok for Kivy-based app
 #android.entrypoint = org.renpy.android.PythonActivity
 
@@ -150,6 +159,7 @@ android.permissions = CAMERA
 
 # (str) python-for-android branch to use, defaults to master
 #p4a.branch = stable
+p4a.branch = master
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
@@ -196,6 +206,7 @@ android.arch = armeabi-v7a
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 #p4a.local_recipes =
+p4a.local_recipes = %(source.dir)s/python-for-android/recipes/
 
 # (str) Filename to the hook for p4a
 #p4a.hook =
@@ -222,7 +233,7 @@ android.arch = armeabi-v7a
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
-log_level = 2
+log_level = 1
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1

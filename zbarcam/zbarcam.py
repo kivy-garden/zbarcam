@@ -2,7 +2,7 @@ import os
 from collections import namedtuple
 
 import PIL
-import zbar
+import zbarlight
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -22,7 +22,6 @@ except AttributeError:
     PIL.Image.Image.tobytes = PIL.Image.Image.tostring
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
 
 
 class ZBarCam(AnchorLayout):
@@ -33,15 +32,17 @@ class ZBarCam(AnchorLayout):
     resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
+    Symbol = namedtuple('Symbol', ['type', 'data'])
+    # checking all possible types by default
+    code_types = ListProperty(zbarlight.Symbologies.keys())
 
-    Qrcode = namedtuple(
-            'Qrcode', ['type', 'data', 'bounds', 'quality', 'count'])
-
+    # TODO: handle code types
     def __init__(self, **kwargs):
+        # lazy loading the kv file rather than loading at module level,
+        # that way the `XCamera` import doesn't happen too early
+        Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
         super(ZBarCam, self).__init__(**kwargs)
         Clock.schedule_once(lambda dt: self._setup())
-        # creates a scanner used for detecting qrcode
-        self.scanner = zbar.ImageScanner()
 
     def _setup(self):
         """
@@ -80,26 +81,21 @@ class ZBarCam(AnchorLayout):
         image_data = texture.pixels
         size = texture.size
         fmt = texture.colorfmt.upper()
+        # PIL doesn't support BGRA but IOS uses BGRA for the camera
+        # if BGRA is detected it will switch to RGBA, color will be off
+        # but we don't care as it's just looking for barcodes
+        if platform == 'ios' and fmt == 'BGRA':
+            fmt = 'RGBA'
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        # convert to greyscale; since zbar only works with it
-        pil_image = pil_image.convert('L')
-        width, height = pil_image.size
-        raw_image = pil_image.tobytes()
-        zimage = zbar.Image(width, height, "Y800", raw_image)
-        result = self.scanner.scan(zimage)
-        if result == 0:
-            self.symbols = []
-            return
-        # we detected qrcode extract and dispatch them
+        # calling `zbarlight.scan_codes()` for every single `code_type`,
+        # zbarlight doesn't yet provide a more efficient way to do this, see:
+        # https://github.com/Polyconseil/zbarlight/issues/23
         symbols = []
-        for symbol in zimage:
-            qrcode = ZBarCam.Qrcode(
-                type=symbol.type,
-                data=symbol.data,
-                quality=symbol.quality,
-                count=symbol.count,
-                bounds=None)
-            symbols.append(qrcode)
+        for code_type in self.code_types:
+            codes = zbarlight.scan_codes(code_type, pil_image) or []
+            for code in codes:
+                symbol = ZBarCam.Symbol(type=code_type, data=code)
+                symbols.append(symbol)
         self.symbols = symbols
 
     @property
@@ -121,10 +117,11 @@ BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
+        code_types: 'qrcode', 'ean13'
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
-        text: ", ".join([str(symbol.data) for symbol in zbarcam.symbols])
+        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
 

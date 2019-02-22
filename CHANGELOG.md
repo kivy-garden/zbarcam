@@ -1,5 +1,15 @@
 # Change Log
 
+## [20190222]
+
+ - Provide Makefile, refs #15
+ - Setup continuous integration testing, refs #6, #14
+ - Speedup OpenCV compilation time, refs #16
+ - Migrated to zbarlight, refs #5, #13
+ - Introduced UI tests, refs #4
+ - Using non-root Docker container, refs #27
+ - Run UI tests from Travis, refs #26
+
 ## [20171220]
 
  - Full screen camera

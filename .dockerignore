@@ -1,0 +1,6 @@
+venv/
+.git/
+.buildozer/
+.pytest_cache/
+.tox/
+opencv*
