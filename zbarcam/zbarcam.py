@@ -46,6 +46,9 @@ class ZBarCam(AnchorLayout):
         """
         Postpones some setup tasks that require self.ids dictionary.
         """
+        if platform == 'android':
+            from android.permissions import request_permission, Permission
+            request_permission(Permission.CAMERA)
         self._remove_shoot_button()
         self._enable_android_autofocus()
         self.xcamera._camera.bind(on_texture=self._on_texture)
