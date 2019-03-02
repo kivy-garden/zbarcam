@@ -1,7 +1,8 @@
 import os
+from collections import namedtuple
 
 import PIL
-import zbarlight
+from pyzbar import pyzbar
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -30,12 +31,13 @@ class ZBarCam(AnchorLayout):
     """
     resolution = ListProperty([640, 480])
 
-    codes = ListProperty([])
+    symbols = ListProperty([])
+    Symbol = namedtuple('Symbol', ['type', 'data'])
     # checking all possible types by default
-    code_types = ListProperty(zbarlight.Symbologies.keys())
+    code_types = ListProperty(set(pyzbar.ZBarSymbol))
 
-    # TODO: handle code types
     def __init__(self, **kwargs):
+        self._request_android_permissions()
         # lazy loading the kv file rather than loading at module level,
         # that way the `XCamera` import doesn't happen too early
         Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
@@ -46,9 +48,6 @@ class ZBarCam(AnchorLayout):
         """
         Postpones some setup tasks that require self.ids dictionary.
         """
-        if platform == 'android':
-            from android.permissions import request_permission, Permission
-            request_permission(Permission.CAMERA)
         self._remove_shoot_button()
         self._enable_android_autofocus()
         self.xcamera._camera.bind(on_texture=self._on_texture)
@@ -74,8 +73,18 @@ class ZBarCam(AnchorLayout):
         params.setFocusMode('continuous-video')
         camera.setParameters(params)
 
+    def _request_android_permissions(self):
+        """
+        Requests CAMERA permission on Android.
+        """
+        print('_request_android_permissions()')
+        if not self.is_android():
+            return
+        from android.permissions import request_permission, Permission
+        request_permission(Permission.CAMERA)
+
     def _on_texture(self, instance):
-        self.codes = self._detect_qrcode_frame(
+        self.symbols = self._detect_qrcode_frame(
             texture=instance.texture, code_types=self.code_types)
 
     @staticmethod
@@ -89,7 +98,12 @@ class ZBarCam(AnchorLayout):
         if platform == 'ios' and fmt == 'BGRA':
             fmt = 'RGBA'
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        return zbarlight.scan_codes(code_types, pil_image) or []
+        symbols = []
+        codes = pyzbar.decode(pil_image, symbols=code_types)
+        for code in codes:
+            symbol = ZBarCam.Symbol(type=code.type, data=code.data)
+            symbols.append(symbol)
+        return symbols
 
     @property
     def xcamera(self):
@@ -106,15 +120,16 @@ class ZBarCam(AnchorLayout):
 
 
 DEMO_APP_KV_LANG = """
+#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
-        code_types: 'qrcode', 'ean13'
+        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
-        text: ', '.join([str(code) for code in zbarcam.codes])
+        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
 
