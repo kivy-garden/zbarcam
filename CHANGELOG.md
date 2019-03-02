@@ -1,5 +1,13 @@
 # Change Log
 
+## [Unreleased]
+
+  - Adds Python3 support, refs #5
+  - Fully migrated Android from PIL to Pillow, refs #13
+  - Handles Android runtime permissions, refs #30
+  - Fixes codes not detected on Android, refs #32
+  - Migrates from zbarlight to pyzbar
+
 ## [20190223]
 
   - Fix zbarlight dependency in setup.py, refs #28
