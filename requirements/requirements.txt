@@ -2,5 +2,5 @@ pyzbar==0.1.8
 # 5fc5385 adds opencv 4 support
 https://github.com/kivy/kivy/archive/5fc5385.zip
 Kivy-Garden==0.1.4
-Pillow==4.3.0
+Pillow==5.2.0
 numpy==1.13.3

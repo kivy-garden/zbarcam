@@ -42,7 +42,7 @@ requirements =
     kivy==5fc5385,
     libiconv,
     libzbar,
-    Pillow==4.3.0,
+    Pillow==5.2.0,
     python3,
     pyzbar==0.1.8
 
@@ -241,7 +241,7 @@ p4a.local_recipes = %(source.dir)s/python-for-android/recipes/
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
-log_level = 1
+log_level = 2
 
 # (int) Display warning if buildozer is run as root (0 = False, 1 = True)
 warn_on_root = 1
