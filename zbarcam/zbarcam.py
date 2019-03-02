@@ -2,24 +2,14 @@ import os
 from collections import namedtuple
 
 import PIL
-from pyzbar import pyzbar
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.utils import platform
-
-# Pillow is not currently available for Android:
-# https://github.com/kivy/python-for-android/pull/786
-try:
-    # Pillow
-    PIL.Image.frombytes
-    PIL.Image.Image.tobytes
-except AttributeError:
-    # PIL
-    PIL.Image.frombytes = PIL.Image.frombuffer
-    PIL.Image.Image.tobytes = PIL.Image.Image.tostring
+from PIL import ImageOps
+from pyzbar import pyzbar
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -77,27 +67,38 @@ class ZBarCam(AnchorLayout):
         """
         Requests CAMERA permission on Android.
         """
-        print('_request_android_permissions()')
         if not self.is_android():
             return
         from android.permissions import request_permission, Permission
         request_permission(Permission.CAMERA)
 
+    @classmethod
+    def _fix_android_image(cls, pil_image):
+        """
+        On Android, the image seems mirrored and rotated somehow, refs #32.
+        """
+        if not cls.is_android():
+            return pil_image
+        pil_image = pil_image.rotate(90)
+        pil_image = ImageOps.mirror(pil_image)
+        return pil_image
+
     def _on_texture(self, instance):
         self.symbols = self._detect_qrcode_frame(
             texture=instance.texture, code_types=self.code_types)
 
-    @staticmethod
-    def _detect_qrcode_frame(texture, code_types):
+    @classmethod
+    def _detect_qrcode_frame(cls, texture, code_types):
         image_data = texture.pixels
         size = texture.size
         fmt = texture.colorfmt.upper()
         # PIL doesn't support BGRA but IOS uses BGRA for the camera
         # if BGRA is detected it will switch to RGBA, color will be off
         # but we don't care as it's just looking for barcodes
-        if platform == 'ios' and fmt == 'BGRA':
+        if cls.is_ios() and fmt == 'BGRA':
             fmt = 'RGBA'
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
+        pil_image = cls._fix_android_image(pil_image)
         symbols = []
         codes = pyzbar.decode(pil_image, symbols=code_types)
         for code in codes:
@@ -115,8 +116,13 @@ class ZBarCam(AnchorLayout):
     def stop(self):
         self.xcamera.play = False
 
-    def is_android(self):
+    @staticmethod
+    def is_android():
         return platform == 'android'
+
+    @staticmethod
+    def is_ios():
+        return platform == 'ios'
 
 
 DEMO_APP_KV_LANG = """
