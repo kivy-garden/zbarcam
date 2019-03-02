@@ -38,7 +38,13 @@ version.filename = %(source.dir)s/zbarcam/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = kivy, pil, libiconv, libzbar, zbarlight>=2.1
+requirements =
+    kivy==5fc5385,
+    libiconv,
+    libzbar,
+    Pillow==4.3.0,
+    python3,
+    pyzbar==0.1.8
 
 
 # (str) Custom source folders for requirements
@@ -89,20 +95,22 @@ fullscreen = 0
 #android.presplash_color = #FFFFFF
 
 # (list) Permissions
-#android.permissions = INTERNET
 android.permissions = CAMERA
 
-# (int) Android API to use
-#android.api = 19
+# (int) Target Android API, should be as high as possible.
+android.api = 27
 
-# (int) Minimum API required
-#android.minapi = 9
+# (int) Minimum API your APK will support.
+android.minapi = 21
 
 # (int) Android SDK version to use
-#android.sdk = 20
+android.sdk = 20
 
 # (str) Android NDK version to use
-#android.ndk = 9c
+android.ndk = 17c
+
+# (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
+android.ndk_api = 21
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 #android.private_storage = True
