@@ -49,8 +49,8 @@ WORKDIR ${WORK_DIR}
 # install buildozer and dependencies
 RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk
 RUN make -f buildozer.mk
-# enforces buildozer master (afebba5) until next release
-RUN pip install --upgrade https://github.com/kivy/buildozer/archive/afebba5.zip
+# enforces buildozer master (cf880a3) until next release
+RUN pip install --upgrade https://github.com/kivy/buildozer/archive/cf880a3.zip
 
 COPY . ${WORK_DIR}
 ENTRYPOINT ["./dockerfiles/start.sh"]
