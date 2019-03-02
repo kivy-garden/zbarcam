@@ -9,6 +9,7 @@
 # docker run -it --rm zbarcam-android
 FROM ubuntu:18.04
 
+ARG CI=false
 ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
@@ -53,4 +54,6 @@ RUN make -f buildozer.mk
 RUN pip install --upgrade https://github.com/kivy/buildozer/archive/cf880a3.zip
 
 COPY . ${WORK_DIR}
+# limits the amount of logs for Travis
+RUN if [ "${CI}" = "true" ]; then sed 's/log_level = [0-9]/log_level = 1/' -i buildozer.spec; fi
 ENTRYPOINT ["./dockerfiles/start.sh"]
