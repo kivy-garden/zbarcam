@@ -39,7 +39,7 @@ class TestZBarCam(unittest.TestCase):
         symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
         self.assertEqual(
             symbols,
-            ['zbarlight test qr code'])
+            [ZBarCam.Symbol(type='QRCODE', data=b'zbarlight test qr code')])
 
     def test_detect_qrcode_frame_one_qrcode_one_ean(self):
         """
@@ -60,7 +60,10 @@ class TestZBarCam(unittest.TestCase):
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
         symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
+        Symbol = ZBarCam.Symbol
         self.assertEqual(
-            symbols,
-            ['second zbarlight test qr code', 'zbarlight test qr code']
+            symbols, [
+                Symbol(type='QRCODE', data=b'second zbarlight test qr code'),
+                Symbol(type='QRCODE', data=b'zbarlight test qr code'),
+            ]
         )

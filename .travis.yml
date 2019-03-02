@@ -18,7 +18,7 @@ before_install:
   - sudo apt install --yes --no-install-recommends xvfb
 
 install:
-  - docker build --tag=$TAG --file=$DOCKERFILE .
+  - docker build --tag=$TAG --file=$DOCKERFILE --build-arg CI .
 
 before_script:
   - sh -e /etc/init.d/xvfb start
