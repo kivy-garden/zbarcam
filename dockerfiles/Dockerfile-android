@@ -27,16 +27,30 @@ ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
 
-# install system dependencies (required to setup all the tools)
+# install system dependencies
 RUN apt install -qq --yes --no-install-recommends \
-    cmake make curl ca-certificates xz-utils unzip openjdk-8-jdk sudo \
-    python-pip python-setuptools zip
-
-# install build dependencies (required to successfully build the project)
-# TODO: should this go to a Makefile instead so it can be shared/reused?
-RUN apt install -qq --yes --no-install-recommends \
-    python3.6 libpython3.6-dev python3-setuptools \
-    file autoconf automake libtool gettext pkg-config
+    autoconf \
+    automake \
+    cmake \
+    make \
+    ca-certificates \
+    curl \
+    gettext \
+    libffi-dev \
+	libltdl-dev \
+    libpython3.6-dev \
+    libtool \
+    file \
+    openjdk-8-jdk \
+    pkg-config \
+    python3.6 \
+    python3-setuptools \
+    python-pip \
+    python-setuptools \
+    sudo \
+    unzip \
+    xz-utils \
+    zip
 
 # prepare non root env
 RUN useradd --create-home --shell /bin/bash ${USER}
