@@ -2,11 +2,12 @@
 
 ## [Unreleased]
 
-  - Adds Python3 support, refs #5
-  - Fully migrated Android from PIL to Pillow, refs #13
-  - Handles Android runtime permissions, refs #30
-  - Fixes codes not detected on Android, refs #32
   - Migrates from zbarlight to pyzbar
+  - Add Python3 support, refs #5
+  - Fully migrated Android from PIL to Pillow, refs #13
+  - Handle Android runtime permissions, refs #30
+  - Fixe codes not detected on Android, refs #32
+  - Update Make with Python3 and opencv 4 support, refs #33
 
 ## [20190223]
 

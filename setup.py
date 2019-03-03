@@ -9,4 +9,4 @@ setup(name='zbarcam',
       url='https://github.com/AndreMiras/garden.zbarcam',
       packages=['zbarcam'],
       package_data={'zbarcam': ['*.kv']},
-      install_requires=['zbarlight>=2.1', 'kivy', 'pillow', 'numpy'])
+      install_requires=['pyzbar', 'kivy', 'pillow', 'numpy'])
