@@ -76,5 +76,8 @@ More likely an import issue in your `.kv` file.
 Try to `from zbarcam import ZBarCam` in your `main.py` to see the exact error.
 It's common to forget `Pillow` in `buildozer.spec` `requirements` section.
 
+### OpenCV related
+See [OpenCV.md](OpenCV.md).
+
 ## Credits
 I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).
