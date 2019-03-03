@@ -31,14 +31,13 @@ source.exclude_dirs = tests, bin, venv, opencv-*
 # version = 0.1
 
 # (str) Application versioning (method 2)
-# version.regex = __version__ = ['"](.*)['"]
 version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
 version.filename = %(source.dir)s/zbarcam/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
 requirements =
+    android,
     kivy==5fc5385,
     libiconv,
     libzbar,
@@ -166,7 +165,6 @@ android.accept_sdk_license = True
 #android.gradle_dependencies =
 
 # (str) python-for-android branch to use, defaults to master
-#p4a.branch = stable
 p4a.branch = master
 
 # (str) OUYA Console category. Should be one of GAME or APP
@@ -214,7 +212,6 @@ android.arch = armeabi-v7a
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 #p4a.local_recipes =
-p4a.local_recipes = %(source.dir)s/python-for-android/recipes/
 
 # (str) Filename to the hook for p4a
 #p4a.hook =
