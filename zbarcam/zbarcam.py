@@ -1,24 +1,15 @@
 import os
+from collections import namedtuple
 
 import PIL
-import zbarlight
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.utils import platform
-
-# Pillow is not currently available for Android:
-# https://github.com/kivy/python-for-android/pull/786
-try:
-    # Pillow
-    PIL.Image.frombytes
-    PIL.Image.Image.tobytes
-except AttributeError:
-    # PIL
-    PIL.Image.frombytes = PIL.Image.frombuffer
-    PIL.Image.Image.tobytes = PIL.Image.Image.tostring
+from PIL import ImageOps
+from pyzbar import pyzbar
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -30,12 +21,13 @@ class ZBarCam(AnchorLayout):
     """
     resolution = ListProperty([640, 480])
 
-    codes = ListProperty([])
+    symbols = ListProperty([])
+    Symbol = namedtuple('Symbol', ['type', 'data'])
     # checking all possible types by default
-    code_types = ListProperty(zbarlight.Symbologies.keys())
+    code_types = ListProperty(set(pyzbar.ZBarSymbol))
 
-    # TODO: handle code types
     def __init__(self, **kwargs):
+        self._request_android_permissions()
         # lazy loading the kv file rather than loading at module level,
         # that way the `XCamera` import doesn't happen too early
         Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
@@ -71,22 +63,48 @@ class ZBarCam(AnchorLayout):
         params.setFocusMode('continuous-video')
         camera.setParameters(params)
 
+    def _request_android_permissions(self):
+        """
+        Requests CAMERA permission on Android.
+        """
+        if not self.is_android():
+            return
+        from android.permissions import request_permission, Permission
+        request_permission(Permission.CAMERA)
+
+    @classmethod
+    def _fix_android_image(cls, pil_image):
+        """
+        On Android, the image seems mirrored and rotated somehow, refs #32.
+        """
+        if not cls.is_android():
+            return pil_image
+        pil_image = pil_image.rotate(90)
+        pil_image = ImageOps.mirror(pil_image)
+        return pil_image
+
     def _on_texture(self, instance):
-        self.codes = self._detect_qrcode_frame(
+        self.symbols = self._detect_qrcode_frame(
             texture=instance.texture, code_types=self.code_types)
 
-    @staticmethod
-    def _detect_qrcode_frame(texture, code_types):
+    @classmethod
+    def _detect_qrcode_frame(cls, texture, code_types):
         image_data = texture.pixels
         size = texture.size
         fmt = texture.colorfmt.upper()
         # PIL doesn't support BGRA but IOS uses BGRA for the camera
         # if BGRA is detected it will switch to RGBA, color will be off
         # but we don't care as it's just looking for barcodes
-        if platform == 'ios' and fmt == 'BGRA':
+        if cls.is_ios() and fmt == 'BGRA':
             fmt = 'RGBA'
         pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
-        return zbarlight.scan_codes(code_types, pil_image) or []
+        pil_image = cls._fix_android_image(pil_image)
+        symbols = []
+        codes = pyzbar.decode(pil_image, symbols=code_types)
+        for code in codes:
+            symbol = ZBarCam.Symbol(type=code.type, data=code.data)
+            symbols.append(symbol)
+        return symbols
 
     @property
     def xcamera(self):
@@ -98,20 +116,26 @@ class ZBarCam(AnchorLayout):
     def stop(self):
         self.xcamera.play = False
 
-    def is_android(self):
+    @staticmethod
+    def is_android():
         return platform == 'android'
+
+    @staticmethod
+    def is_ios():
+        return platform == 'ios'
 
 
 DEMO_APP_KV_LANG = """
+#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
-        code_types: 'qrcode', 'ean13'
+        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
-        text: ', '.join([str(code) for code in zbarcam.codes])
+        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 """
 
 

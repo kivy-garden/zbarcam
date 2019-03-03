@@ -1,5 +1,14 @@
 # Change Log
 
+## [20190303]
+
+  - Add Python3.6 support, refs #5
+  - Fully migrated Android from PIL to Pillow, refs #13
+  - Handle Android runtime permissions, refs #30
+  - Fixe codes not detected on Android, refs #32
+  - Migrate from zbarlight to pyzbar, refs #32
+  - Migrate to Python3.6 and opencv 4, refs #33
+
 ## [20190223]
 
   - Fix zbarlight dependency in setup.py, refs #28
