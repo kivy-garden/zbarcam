@@ -38,7 +38,7 @@ all: system_dependencies virtualenv opencv
 venv:
 	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
 	. venv/bin/activate
-	$(PIP) install Cython==0.26.1
+	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements/requirements.txt
 	$(GARDEN) install xcamera
 
