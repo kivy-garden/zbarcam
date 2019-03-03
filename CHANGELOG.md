@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20190303]
 
   - Add Python3.6 support, refs #5
   - Fully migrated Android from PIL to Pillow, refs #13
