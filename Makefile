@@ -26,8 +26,8 @@ OPENCV_VERSION=4.0.1
 OPENCV_ARCHIVE=$(OPENCV_BASENAME).tar.gz
 OPENCV_BASENAME=opencv-$(OPENCV_VERSION)
 OPENCV_BUILD_LIB_DIR=$(OPENCV_BASENAME)/build/lib
-OPENCV_BUILD=$(OPENCV_BUILD_LIB_DIR)/cv2.so
-OPENCV_DEPLOY=$(SITE_PACKAGES_DIR)/cv2.so
+OPENCV_BUILD=$(OPENCV_BUILD_LIB_DIR)/python$(PYTHON_MAJOR_VERSION)/cv2*.so
+OPENCV_DEPLOY=$(SITE_PACKAGES_DIR)/cv2*.so
 NPROC=`grep -c '^processor' /proc/cpuinfo`
 ifeq ($(PYTHON_MAJOR_VERSION), 3)
 	PYTHON_M := $(PYTHON_M)m
@@ -36,12 +36,14 @@ endif
 
 all: system_dependencies opencv virtualenv
 
-virtualenv:
+venv:
 	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
 	. venv/bin/activate
 	$(PIP) install Cython==0.26.1
 	$(PIP) install -r requirements/requirements.txt
 	$(GARDEN) install xcamera
+
+virtualenv: venv
 
 system_dependencies:
 ifeq ($(OS), Ubuntu)
@@ -90,11 +92,8 @@ $(OPENCV_BUILD): $(OPENCV_ARCHIVE)
 		-B$(OPENCV_BASENAME)/build -H$(OPENCV_BASENAME)
 	cmake --build $(OPENCV_BASENAME)/build -- -j$(NPROC)
 
-opencv_build: $(OPENCV_BUILD)
-
-$(OPENCV_DEPLOY): opencv_build virtualenv
+$(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 	cp $(OPENCV_BUILD) $(SITE_PACKAGES_DIR)
-	cp $(OPENCV_BUILD_LIB_DIR)/python$(PYTHON_MAJOR_VERSION)/*.so $(SITE_PACKAGES_DIR)
 
 opencv: $(OPENCV_DEPLOY)
 
