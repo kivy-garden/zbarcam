@@ -37,7 +37,7 @@ RUN apt install -qq --yes --no-install-recommends \
     curl \
     gettext \
     libffi-dev \
-	libltdl-dev \
+    libltdl-dev \
     libpython3.6-dev \
     libtool \
     file \

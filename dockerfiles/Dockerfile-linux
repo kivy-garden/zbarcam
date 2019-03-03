@@ -35,6 +35,7 @@ RUN apt install --yes --no-install-recommends \
     libsdl2-mixer-dev \
     libsdl2-ttf-dev \
     libpython3.6-dev \
+    libzbar-dev \
     lsb-release \
     make \
     pkg-config \

@@ -10,7 +10,6 @@ SYSTEM_DEPENDENCIES= \
 	libpython$(PYTHON_VERSION)-dev \
 	libsdl2-dev \
 	libzbar-dev \
-	python-numpy \
 	tox \
 	virtualenv \
 	wget
@@ -34,7 +33,7 @@ ifeq ($(PYTHON_MAJOR_VERSION), 3)
 endif
 
 
-all: system_dependencies opencv virtualenv
+all: system_dependencies virtualenv opencv
 
 venv:
 	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
@@ -54,7 +53,9 @@ $(OPENCV_ARCHIVE):
 	curl --location https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
 		--progress-bar --output $(OPENCV_ARCHIVE)
 
-$(OPENCV_BUILD): $(OPENCV_ARCHIVE)
+# The build also relies on virtualenv, because we make references to it.
+# Plus numpy is required to build OpenCV Python module.
+$(OPENCV_BUILD): $(OPENCV_ARCHIVE) virtualenv
 	tar -xf $(OPENCV_BASENAME).tar.gz
 	cmake \
 		-D CMAKE_SHARED_LINKER_FLAGS=-l$(PYTHON_M) \
