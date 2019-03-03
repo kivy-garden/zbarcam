@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+  - Updates Cython for Python3.7 support, refs #35
+
 ## [20190303]
 
   - Add Python3.6 support, refs #5
