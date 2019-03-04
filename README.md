@@ -10,7 +10,7 @@ It's built on top of [Kivy](https://github.com/kivy/kivy) and [pyzbar](https://g
 ## How to use
 Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
 ```yaml
-#:import ZBarCam kivy.garden.zbarcam
+#:import ZBarCam kivy.garden.zbarcam.ZBarCam
 #:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
@@ -34,7 +34,7 @@ sudo apt install libzbar-dev
 
 Install garden requirements:
 ```sh
-garden install xcamera
+garden install --upgrade xcamera
 ```
 
 Install zbarcam:
@@ -42,10 +42,20 @@ Via `garden`:
 ```sh
 garden install --upgrade zbarcam
 ```
+When installed with this method, the import command would be:
+```python
+from kivy.garden.zbarcam import ZBarCam
+```
+
 Via `pip`:
 ```sh
 pip install --upgrade https://github.com/kivy-garden/garden.zbarcam/archive/develop.zip
 ```
+When installed with this method, the import command would be:
+```python
+from zbarcam import ZBarCam
+```
+
 
 You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
 

@@ -2,7 +2,8 @@
 
 ## [Unreleased]
 
-  - Updates Cython for Python3.7 support, refs #35
+  - Update Cython for Python3.7 support, refs #35
+  - Make garden.zbarcam a package again, refs #36
 
 ## [20190303]
 
