@@ -10,7 +10,7 @@ package.name = zbarcamdemo
 package.domain = com.github.andremiras
 
 # (str) Source code where the main.py live
-source.dir = .
+source.dir = zbarcam
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -22,11 +22,7 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (let empty to not exclude anything)
-source.exclude_dirs =
-    bin,
-    dockerfiles,
-    tests,
-    venv
+#source.exclude_dirs = tests, bin
 
 # (list) List of exclusions using pattern matching
 #source.exclude_patterns = license,images/*/*.jpg
@@ -36,7 +32,7 @@ source.exclude_dirs =
 
 # (str) Application versioning (method 2)
 version.regex = __version__ = ['"](.*)['"]
-version.filename = %(source.dir)s/zbarcam/version.py
+version.filename = %(source.dir)s/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
