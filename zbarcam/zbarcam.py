@@ -91,13 +91,12 @@ class ZBarCam(AnchorLayout):
     def _detect_qrcode_frame(cls, texture, code_types):
         image_data = texture.pixels
         size = texture.size
-        fmt = texture.colorfmt.upper()
-        # PIL doesn't support BGRA but IOS uses BGRA for the camera
-        # if BGRA is detected it will switch to RGBA, color will be off
-        # but we don't care as it's just looking for barcodes
-        if cls.is_ios() and fmt == 'BGRA':
-            fmt = 'RGBA'
-        pil_image = PIL.Image.frombytes(mode=fmt, size=size, data=image_data)
+        # Fix for mode mismatch between texture.colorfmt and data returned by
+        # texture.pixels. texture.pixels always returns RGBA, so that should
+        # be passed to PIL no matter what texture.colorfmt returns. refs:
+        # https://github.com/AndreMiras/garden.zbarcam/issues/41
+        pil_image = PIL.Image.frombytes(mode='RGBA', size=size,
+                                        data=image_data)
         pil_image = cls._fix_android_image(pil_image)
         symbols = []
         codes = pyzbar.decode(pil_image, symbols=code_types)
