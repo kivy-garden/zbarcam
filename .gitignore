@@ -6,3 +6,6 @@ venv/
 .buildozer/
 bin/
 opencv-*
+build/
+dist/
+*.egg-info/
