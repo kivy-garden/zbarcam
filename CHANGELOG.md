@@ -5,6 +5,7 @@
   - Update Cython for Python3.7 support, refs #35
   - Make garden.zbarcam a package again, refs #36
   - Don't ship opencv directory to APK, refs #37
+  - Migrate to new garden structure, refs #17
 
 ## [20190303]
 
