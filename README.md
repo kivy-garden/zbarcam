@@ -1,4 +1,4 @@
-# garden.zbarcam
+# zbarcam
 
 [![Build Status](https://travis-ci.org/kivy-garden/zbarcam.svg?branch=develop)](https://travis-ci.org/kivy-garden/zbarcam)
 
@@ -10,7 +10,7 @@ It's built on top of [Kivy](https://github.com/kivy/kivy) and [pyzbar](https://g
 ## How to use
 Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
 ```yaml
-#:import ZBarCam kivy.garden.zbarcam.ZBarCam
+#:import ZBarCam kivy_garden.zbarcam.ZBarCam
 #:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
@@ -23,6 +23,7 @@ BoxLayout:
         size: self.texture_size[0], 50
         text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 ```
+A full working demo is available in [kivy_garden/zbarcam/main.py](kivy_garden/zbarcam/main.py).
 
 ## Install
 
@@ -38,22 +39,12 @@ garden install --upgrade xcamera
 ```
 
 Install zbarcam:
-Via `garden`:
 ```sh
-garden install --upgrade zbarcam
+pip install --upgrade https://github.com/kivy-garden/zbarcam/archive/develop.zip
 ```
-When installed with this method, the import command would be:
+Then import it in your Python code via:
 ```python
-from kivy.garden.zbarcam import ZBarCam
-```
-
-Via `pip`:
-```sh
-pip install --upgrade https://github.com/kivy-garden/garden.zbarcam/archive/develop.zip
-```
-When installed with this method, the import command would be:
-```python
-from zbarcam import ZBarCam
+from kivy_garden.zbarcam import ZBarCam
 ```
 
 
@@ -76,10 +67,7 @@ make uitest
 ## Troubleshooting
 
 ### Install `Unable to import package 'kivy.garden.xcamera.XCamera'`
-Missing the `xcamera` dependency, install it with:
-```sh
-garden install xcamera
-```
+You're missing the `xcamera` dependency. Install it as described in the install instructions.
 
 ### Android `ValueError: Empty module name`
 More likely an import issue in your `.kv` file.

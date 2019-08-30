@@ -2,7 +2,6 @@ import os
 from collections import namedtuple
 
 import PIL
-from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
@@ -122,27 +121,3 @@ class ZBarCam(AnchorLayout):
     @staticmethod
     def is_ios():
         return platform == 'ios'
-
-
-DEMO_APP_KV_LANG = """
-#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
-BoxLayout:
-    orientation: 'vertical'
-    ZBarCam:
-        id: zbarcam
-        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
-    Label:
-        size_hint: None, None
-        size: self.texture_size[0], 50
-        text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
-"""
-
-
-class DemoApp(App):
-
-    def build(self):
-        return Builder.load_string(DEMO_APP_KV_LANG)
-
-
-if __name__ == '__main__':
-    DemoApp().run()
