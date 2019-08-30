@@ -5,7 +5,7 @@ import mock
 from kivy.base import EventLoop
 from kivy.core.image import Image
 
-from zbarcam import ZBarCam
+from kivy_garden.zbarcam import ZBarCam
 
 FIXTURE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'fixtures')

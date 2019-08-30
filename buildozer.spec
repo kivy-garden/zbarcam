@@ -10,7 +10,7 @@ package.name = zbarcamdemo
 package.domain = com.github.andremiras
 
 # (str) Source code where the main.py live
-source.dir = zbarcam
+source.dir = kivy_garden/zbarcam
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
