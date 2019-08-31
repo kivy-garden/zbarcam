@@ -109,7 +109,7 @@ $(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 opencv: $(OPENCV_DEPLOY)
 
 clean:
-	rm -rf $(VENV_NAME) .tox/ $(DOWNLOAD_DIR)
+	rm -rf $(VENV_NAME) .tox/ $(DOWNLOAD_DIR) $(DOCS_DIR)/build/
 
 test:
 	$(TOX)

@@ -1,9 +1,9 @@
 
-####################
-  The Flower API
-####################
+################
+  Zbarcam API
+################
 
 .. toctree::
    :maxdepth: 1
 
-   flower.rst
+   zbarcam.rst
