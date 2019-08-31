@@ -3,6 +3,9 @@ PIP=$(VENV_NAME)/bin/pip
 TOX=`which tox`
 GARDEN=$(VENV_NAME)/bin/garden
 PYTHON=$(VENV_NAME)/bin/python
+# using full path so it can be used outside the root dir
+SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
+DOCS_DIR=doc
 SYSTEM_DEPENDENCIES= \
 	build-essential \
 	cmake \
@@ -114,3 +117,6 @@ test:
 uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
 	$(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
+
+docs:
+	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html
