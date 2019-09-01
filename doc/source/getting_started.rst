@@ -7,5 +7,5 @@
 .. toctree::
    :maxdepth: 2
 
-   installation.rst
+   installation.md
    examples.md
