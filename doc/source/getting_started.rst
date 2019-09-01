@@ -8,4 +8,4 @@
    :maxdepth: 2
 
    installation.rst
-   examples.rst
+   examples.md
