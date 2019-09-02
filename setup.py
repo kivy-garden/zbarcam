@@ -1,7 +1,7 @@
 import os
 
-from setuptools import setup
-from kivy_garden.zbarcam import version
+from setuptools import find_namespace_packages, setup
+from src.kivy_garden.zbarcam import version
 
 
 def read(fname):
@@ -18,8 +18,9 @@ setup_params = {
     'long_description_content_type': 'text/markdown',
     'author': 'Andre Miras',
     'url': 'https://github.com/kivy-garden/zbarcam',
-    'packages': ['kivy_garden.zbarcam'],
+    'packages': find_namespace_packages(where='src'),
     'package_data': {'kivy_garden.zbarcam': ['*.kv']},
+    'package_dir': {'': 'src'},
     'install_requires': [
         'kivy',
         'numpy',

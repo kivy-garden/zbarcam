@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """
 This demo can be ran from the project root directory via:
-```
-PYTHONPATH=. python kivy_garden/zbarcam/main.py
+```sh
+python src/main.py
 ```
 It can also be ran via p4a/buildozer.
 """

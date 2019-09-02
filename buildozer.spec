@@ -10,7 +10,7 @@ package.name = zbarcamdemo
 package.domain = com.github.andremiras
 
 # (str) Source code where the main.py live
-source.dir = kivy_garden/zbarcam
+source.dir = src
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -32,7 +32,7 @@ source.include_exts = py,png,jpg,kv,atlas
 
 # (str) Application versioning (method 2)
 version.regex = __version__ = ['"](.*)['"]
-version.filename = %(source.dir)s/version.py
+version.filename = %(source.dir)s/kivy_garden/zbarcam/version.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
