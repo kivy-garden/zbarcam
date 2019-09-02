@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [20190902]
 
   - Update Cython for Python3.7 support, refs #35
   - Make garden.zbarcam a package again, refs #36
