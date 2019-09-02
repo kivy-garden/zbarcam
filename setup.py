@@ -9,13 +9,30 @@ def read(fname):
         return f.read()
 
 
-setup(name='zbarcam',
-      version=version.__version__,
-      description='Real time Barcode and QR Code scanner Edit',
-      long_description=read('README.md'),
-      long_description_content_type='text/markdown',
-      author='Andre Miras',
-      url='https://github.com/AndreMiras/garden.zbarcam',
-      packages=['kivy_garden.zbarcam'],
-      package_data={'kivy_garden.zbarcam': ['*.kv']},
-      install_requires=['pyzbar', 'kivy', 'pillow', 'numpy'])
+# exposing the params so it can be imported
+setup_params = {
+    'name': 'kivy_garden.zbarcam',
+    'version': version.__version__,
+    'description': 'Real time Barcode and QR Code scanner Edit',
+    'long_description': read('README.md'),
+    'long_description_content_type': 'text/markdown',
+    'author': 'Andre Miras',
+    'url': 'https://github.com/kivy-garden/zbarcam',
+    'packages': ['kivy_garden.zbarcam'],
+    'package_data': {'kivy_garden.zbarcam': ['*.kv']},
+    'install_requires': [
+        'kivy',
+        'numpy',
+        'pillow',
+        'pyzbar',
+    ],
+}
+
+
+def run_setup():
+    setup(**setup_params)
+
+
+# makes sure the setup doesn't run at import time
+if __name__ == '__main__':
+    run_setup()
