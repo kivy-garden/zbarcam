@@ -1,6 +1,8 @@
 # zbarcam
 
 [![Build Status](https://travis-ci.org/kivy-garden/zbarcam.svg?branch=develop)](https://travis-ci.org/kivy-garden/zbarcam)
+[![PyPI version](https://badge.fury.io/py/zbarcam.svg)](https://badge.fury.io/py/zbarcam)
+[![Documentation Status](https://readthedocs.org/projects/zbarcam/badge/?version=latest)](https://zbarcam.readthedocs.io/en/latest/?badge=latest)
 
 Real time Barcode and QR Code scanner using the camera.
 It's built on top of [Kivy](https://github.com/kivy/kivy) and [pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar).
