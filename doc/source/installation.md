@@ -25,7 +25,7 @@ pip install https://github.com/kivy-garden/zbarcam/archive/develop.zip
 
 You can also automatically install it using garden's pypi server with:
 ```sh
-python -m pip install kivy_garden.zbarcam --extra-index-url https://kivy-garden.github.io/simple/
+python -m pip install zbarcam --extra-index-url https://kivy-garden.github.io/simple/
 ```
 
 You can permanently add our garden server to your [pip.conf](https://pip.pypa.io/en/stable/user_guide/#config-file)

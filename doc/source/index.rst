@@ -12,6 +12,7 @@ Welcome to Zbarcam's documentation!
 
    getting_started.rst
    api.rst
+   contributing.rst
 
 
 
