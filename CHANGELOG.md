@@ -1,5 +1,14 @@
 # Change Log
 
+## [20190902]
+
+  - Update Cython for Python3.7 support, refs #35
+  - Make garden.zbarcam a package again, refs #36
+  - Don't ship opencv directory to APK, refs #37
+  - Migrate to new garden structure, refs #17
+  - Publish documentation to readthedocs, refs #18
+  - Publish to PyPI, refs #19
+
 ## [20190303]
 
   - Add Python3.6 support, refs #5

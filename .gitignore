@@ -5,3 +5,7 @@ venv/
 .tox/
 .buildozer/
 bin/
+opencv-*
+build/
+dist/
+*.egg-info/

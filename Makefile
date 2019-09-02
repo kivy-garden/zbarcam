@@ -3,6 +3,9 @@ PIP=$(VENV_NAME)/bin/pip
 TOX=`which tox`
 GARDEN=$(VENV_NAME)/bin/garden
 PYTHON=$(VENV_NAME)/bin/python
+# using full path so it can be used outside the root dir
+SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
+DOCS_DIR=doc
 SYSTEM_DEPENDENCIES= \
 	build-essential \
 	cmake \
@@ -21,13 +24,19 @@ PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
 # python3 has a "m" suffix for both include path and library
 PYTHON_M=$(PYTHON_WITH_VERSION)
 SITE_PACKAGES_DIR=$(VENV_NAME)/lib/$(PYTHON_WITH_VERSION)/site-packages
+TMPDIR ?= /tmp
+DOWNLOAD_DIR = $(TMPDIR)/downloads
 OPENCV_VERSION=4.0.1
-OPENCV_ARCHIVE=$(OPENCV_BASENAME).tar.gz
 OPENCV_BASENAME=opencv-$(OPENCV_VERSION)
-OPENCV_BUILD_LIB_DIR=$(OPENCV_BASENAME)/build/lib
+OPENCV_ARCHIVE=$(OPENCV_BASENAME).tar.gz
+OPENCV_ARCHIVE_PATH=$(DOWNLOAD_DIR)/$(OPENCV_ARCHIVE)
+OPENCV_EXTRACT_PATH=$(DOWNLOAD_DIR)/$(OPENCV_BASENAME)
+OPENCV_BUILD_LIB_DIR=$(OPENCV_EXTRACT_PATH)/build/lib
 OPENCV_BUILD=$(OPENCV_BUILD_LIB_DIR)/python$(PYTHON_MAJOR_VERSION)/cv2*.so
 OPENCV_DEPLOY=$(SITE_PACKAGES_DIR)/cv2*.so
 NPROC=`grep -c '^processor' /proc/cpuinfo`
+
+
 ifeq ($(PYTHON_MAJOR_VERSION), 3)
 	PYTHON_M := $(PYTHON_M)m
 endif
@@ -38,7 +47,7 @@ all: system_dependencies virtualenv opencv
 venv:
 	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
 	. venv/bin/activate
-	$(PIP) install Cython==0.26.1
+	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements/requirements.txt
 	$(GARDEN) install xcamera
 
@@ -49,14 +58,15 @@ ifeq ($(OS), Ubuntu)
 	sudo apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
 endif
 
-$(OPENCV_ARCHIVE):
+$(OPENCV_ARCHIVE_PATH):
+	mkdir -p $(DOWNLOAD_DIR)
 	curl --location https://github.com/opencv/opencv/archive/$(OPENCV_VERSION).tar.gz \
-		--progress-bar --output $(OPENCV_ARCHIVE)
+		--progress-bar --output $(OPENCV_ARCHIVE_PATH)
 
 # The build also relies on virtualenv, because we make references to it.
 # Plus numpy is required to build OpenCV Python module.
-$(OPENCV_BUILD): $(OPENCV_ARCHIVE) virtualenv
-	tar -xf $(OPENCV_BASENAME).tar.gz
+$(OPENCV_BUILD): $(OPENCV_ARCHIVE_PATH) virtualenv
+	tar -xf $(OPENCV_ARCHIVE_PATH) --directory $(DOWNLOAD_DIR)
 	cmake \
 		-D CMAKE_SHARED_LINKER_FLAGS=-l$(PYTHON_M) \
 		-D BUILD_SHARED_LIBS=ON \
@@ -90,8 +100,8 @@ $(OPENCV_BUILD): $(OPENCV_ARCHIVE) virtualenv
 		-D WITH_JASPER=OFF \
 		-D WITH_OPENEXR=OFF \
 		-D WITH_PVAPI=OFF \
-		-B$(OPENCV_BASENAME)/build -H$(OPENCV_BASENAME)
-	cmake --build $(OPENCV_BASENAME)/build -- -j$(NPROC)
+		-B$(OPENCV_EXTRACT_PATH)/build -H$(OPENCV_EXTRACT_PATH)
+	cmake --build $(OPENCV_EXTRACT_PATH)/build -- -j$(NPROC)
 
 $(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 	cp $(OPENCV_BUILD) $(SITE_PACKAGES_DIR)
@@ -99,7 +109,7 @@ $(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 opencv: $(OPENCV_DEPLOY)
 
 clean:
-	rm -rf $(VENV_NAME) .tox/ $(OPENCV_BASENAME)
+	rm -rf $(VENV_NAME) .tox/ $(DOWNLOAD_DIR) $(DOCS_DIR)/build/ dist/ build/
 
 test:
 	$(TOX)
@@ -107,3 +117,6 @@ test:
 uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
 	$(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
+
+docs:
+	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html

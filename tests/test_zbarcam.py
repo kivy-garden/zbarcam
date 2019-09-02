@@ -5,7 +5,7 @@ import mock
 from kivy.base import EventLoop
 from kivy.core.image import Image
 
-from zbarcam import ZBarCam
+from kivy_garden.zbarcam import ZBarCam
 
 FIXTURE_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'fixtures')
@@ -49,8 +49,12 @@ class TestZBarCam(unittest.TestCase):
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
         symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
-        # currently detects no codes, but that's a bug
-        self.assertEqual(symbols, [])
+        self.assertEqual(
+            symbols, [
+                ZBarCam.Symbol(type='QRCODE', data=b'zbarlight test qr code'),
+                ZBarCam.Symbol(type='UPCA', data=b'012345678905')
+            ]
+        )
 
     def test_detect_qrcode_frame_two_qrcodes(self):
         """
