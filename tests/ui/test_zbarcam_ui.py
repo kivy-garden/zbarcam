@@ -2,10 +2,12 @@ import os
 import time
 import unittest
 from functools import partial
+
 import mock
 from kivy.clock import Clock
-from main import DemoApp
+
 from kivy_garden.zbarcam.zbarcam import ZBarCam
+from main import DemoApp
 
 
 class UITestCase(unittest.TestCase):

@@ -1,6 +1,7 @@
 import os
 
 from setuptools import find_namespace_packages, setup
+
 from src.kivy_garden.zbarcam import version
 
 

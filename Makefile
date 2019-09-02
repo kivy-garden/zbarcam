@@ -3,6 +3,9 @@ PIP=$(VENV_NAME)/bin/pip
 TOX=`which tox`
 GARDEN=$(VENV_NAME)/bin/garden
 PYTHON=$(VENV_NAME)/bin/python
+ISORT=$(VENV_NAME)/bin/isort
+FLAKE8=$(VENV_NAME)/bin/flake8
+SOURCES=src/ tests/ setup.py setup_meta.py
 # using full path so it can be used outside the root dir
 SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
 DOCS_DIR=doc
@@ -117,6 +120,17 @@ test:
 uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
 	PYTHONPATH=src $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
+
+isort-check:
+	$(ISORT) --check-only --recursive --diff $(SOURCES)
+
+isort-fix:
+	$(ISORT) --recursive $(SOURCES)
+
+flake8:
+	$(FLAKE8) $(SOURCES)
+
+lint: isort-check, flake8
 
 docs:
 	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html
