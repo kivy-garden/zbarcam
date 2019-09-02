@@ -1,5 +1,8 @@
 # Change Log
 
+## [Unreleased]
+  - Update buildozer, p4a, and ndk versions, refs #21
+
 ## [20190902]
 
   - Update Cython for Python3.7 support, refs #35
