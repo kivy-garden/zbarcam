@@ -4,7 +4,7 @@ import unittest
 from functools import partial
 import mock
 from kivy.clock import Clock
-from kivy_garden.zbarcam.main import DemoApp
+from main import DemoApp
 from kivy_garden.zbarcam.zbarcam import ZBarCam
 
 
