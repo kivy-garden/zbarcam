@@ -2,6 +2,7 @@
 
 ## [Unreleased]
   - Update buildozer, p4a, and ndk versions, refs #21
+  - Publish to F-Droid, refs #20
 
 ## [20190902]
 
