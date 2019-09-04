@@ -58,7 +58,7 @@ class UITestCase(unittest.TestCase):
     def test_ui_base(self):
         # uses the `wraps` parameter to conditionally enable/disable mock
         Camera = self.get_camera_class()
-        with mock.patch('kivy.core.camera.Camera', wraps=Camera):
+        with mock.patch('kivy.uix.camera.CoreCamera', wraps=Camera):
             app = DemoApp()
             p = partial(self.run_test, app)
             Clock.schedule_once(p, 0.000001)

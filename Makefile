@@ -130,7 +130,7 @@ isort-fix:
 flake8:
 	$(FLAKE8) $(SOURCES)
 
-lint: isort-check, flake8
+lint: isort-check flake8
 
 docs:
 	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html

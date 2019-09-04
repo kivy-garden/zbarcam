@@ -2,15 +2,56 @@ import os
 from collections import namedtuple
 
 import PIL
-from kivy.clock import Clock
+from kivy.clock import Clock, mainthread
+from kivy.garden.xcamera import XCamera
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy.utils import platform
-from PIL import ImageOps
 from pyzbar import pyzbar
 
+from .utils import (check_request_camera_permission, fix_android_image,
+                    is_android)
+
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+
+
+class CustomXCamera(XCamera):
+    """
+    Inherits from `kivy.garden.xcamera.XCamera`.
+    Overrides `_on_index()` to make sure the `kivy.core.camera.Camera` object
+    is only created if permission are granted on Android.
+    On other system, it's a noop calling the parent `_on_index()`.
+    """
+
+    def __init__(self, **kwargs):
+        self.register_event_type('on_camera_ready')
+        super().__init__(**kwargs)
+
+    def _on_index(self, *largs):
+        """
+        Overrides `kivy.uix.camera.Camera._on_index()` to make sure
+        `camera.open()` is not called unless Android `CAMERA` permission is
+        granted, refs #12.
+        """
+        @mainthread
+        def on_permissions_callback(permissions, grant_results):
+            """
+            On camera permission callback calls parent `_on_index()` method.
+            """
+            if all(grant_results):
+                self._on_index_dispatch(*largs)
+        if check_request_camera_permission(callback=on_permissions_callback):
+            self._on_index_dispatch(*largs)
+
+    def _on_index_dispatch(self, *largs):
+        super()._on_index(*largs)
+        self.dispatch('on_camera_ready')
+
+    def on_camera_ready(self):
+        """
+        Fired when the camera is ready.
+        """
+        pass
 
 
 class ZBarCam(AnchorLayout):
@@ -26,11 +67,10 @@ class ZBarCam(AnchorLayout):
     code_types = ListProperty(set(pyzbar.ZBarSymbol))
 
     def __init__(self, **kwargs):
-        self._request_android_permissions()
         # lazy loading the kv file rather than loading at module level,
         # that way the `XCamera` import doesn't happen too early
         Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
-        super(ZBarCam, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         Clock.schedule_once(lambda dt: self._setup())
 
     def _setup(self):
@@ -38,9 +78,16 @@ class ZBarCam(AnchorLayout):
         Postpones some setup tasks that require self.ids dictionary.
         """
         self._remove_shoot_button()
+        # `self.xcamera._camera` instance may not be available if e.g.
+        # the `CAMERA` permission is not granted
+        self.xcamera.bind(on_camera_ready=self._on_camera_ready)
+
+    def _on_camera_ready(self, xcamera):
+        """
+        Starts binding when the `xcamera._camera` instance is ready.
+        """
+        xcamera._camera.bind(on_texture=self._on_texture)
         self._enable_android_autofocus()
-        self.xcamera._camera.bind(on_texture=self._on_texture)
-        # self.add_widget(self.xcamera)
 
     def _remove_shoot_button(self):
         """
@@ -55,32 +102,12 @@ class ZBarCam(AnchorLayout):
         """
         Enables autofocus on Android.
         """
-        if not self.is_android():
+        if not is_android():
             return
         camera = self.xcamera._camera._android_camera
         params = camera.getParameters()
         params.setFocusMode('continuous-video')
         camera.setParameters(params)
-
-    def _request_android_permissions(self):
-        """
-        Requests CAMERA permission on Android.
-        """
-        if not self.is_android():
-            return
-        from android.permissions import request_permission, Permission
-        request_permission(Permission.CAMERA)
-
-    @classmethod
-    def _fix_android_image(cls, pil_image):
-        """
-        On Android, the image seems mirrored and rotated somehow, refs #32.
-        """
-        if not cls.is_android():
-            return pil_image
-        pil_image = pil_image.rotate(90)
-        pil_image = ImageOps.mirror(pil_image)
-        return pil_image
 
     def _on_texture(self, instance):
         self.symbols = self._detect_qrcode_frame(
@@ -96,7 +123,7 @@ class ZBarCam(AnchorLayout):
         # https://github.com/AndreMiras/garden.zbarcam/issues/41
         pil_image = PIL.Image.frombytes(mode='RGBA', size=size,
                                         data=image_data)
-        pil_image = cls._fix_android_image(pil_image)
+        pil_image = fix_android_image(pil_image)
         symbols = []
         codes = pyzbar.decode(pil_image, symbols=code_types)
         for code in codes:
@@ -113,11 +140,3 @@ class ZBarCam(AnchorLayout):
 
     def stop(self):
         self.xcamera.play = False
-
-    @staticmethod
-    def is_android():
-        return platform == 'android'
-
-    @staticmethod
-    def is_ios():
-        return platform == 'ios'
