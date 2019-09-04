@@ -9,8 +9,7 @@ from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
 from pyzbar import pyzbar
 
-from .utils import (check_request_camera_permission, fix_android_image,
-                    is_android)
+from .utils import check_request_camera_permission, fix_android_image
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
@@ -87,7 +86,6 @@ class ZBarCam(AnchorLayout):
         Starts binding when the `xcamera._camera` instance is ready.
         """
         xcamera._camera.bind(on_texture=self._on_texture)
-        self._enable_android_autofocus()
 
     def _remove_shoot_button(self):
         """
@@ -97,17 +95,6 @@ class ZBarCam(AnchorLayout):
         xcamera = self.xcamera
         shoot_button = xcamera.children[0]
         xcamera.remove_widget(shoot_button)
-
-    def _enable_android_autofocus(self):
-        """
-        Enables autofocus on Android.
-        """
-        if not is_android():
-            return
-        camera = self.xcamera._camera._android_camera
-        params = camera.getParameters()
-        params.setFocusMode('continuous-video')
-        camera.setParameters(params)
 
     def _on_texture(self, instance):
         self.symbols = self._detect_qrcode_frame(

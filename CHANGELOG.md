@@ -4,6 +4,7 @@
   - Update buildozer, p4a, and ndk versions, refs #21
   - Publish to F-Droid, refs #20
   - Improve Android camera permission handling, refs #12, #16
+  - Use upstream autofocus, refs #8
 
 ## [20190902]
 
