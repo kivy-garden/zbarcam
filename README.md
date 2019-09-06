@@ -25,7 +25,7 @@ BoxLayout:
         size: self.texture_size[0], 50
         text: ', '.join([str(symbol.data) for symbol in zbarcam.symbols])
 ```
-A full working demo is available in [kivy_garden/zbarcam/main.py](kivy_garden/zbarcam/main.py).
+A full working demo is available in [src/main.py](https://github.com/kivy-garden/zbarcam/blob/master/src/main.py).
 
 ## Install
 
