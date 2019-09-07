@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [2019.0907]
 
   - Update buildozer, p4a, and ndk versions, refs #21
   - Publish to F-Droid, refs #20
