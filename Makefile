@@ -5,6 +5,7 @@ GARDEN=$(VENV_NAME)/bin/garden
 PYTHON=$(VENV_NAME)/bin/python
 ISORT=$(VENV_NAME)/bin/isort
 FLAKE8=$(VENV_NAME)/bin/flake8
+TWINE=`which twine`
 SOURCES=src/ tests/ setup.py setup_meta.py
 # using full path so it can be used outside the root dir
 SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
@@ -134,3 +135,12 @@ lint: isort-check flake8
 
 docs:
 	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html
+
+release/build:
+	rm -rf dist/ build/
+	$(PYTHON) setup.py sdist bdist_wheel
+	$(PYTHON) setup_meta.py sdist bdist_wheel
+	$(TWINE) check dist/*
+
+release/upload:
+	$(TWINE) upload dist/*
