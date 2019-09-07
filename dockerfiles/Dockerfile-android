@@ -14,9 +14,10 @@ ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
     PATH="${HOME_DIR}/.local/bin:${PATH}"
-ENV DOCKERFILES_VERSION="master" \
+ENV DOCKERFILES_VERSION="v20190902" \
     DOCKERFILES_URL="https://raw.githubusercontent.com/AndreMiras/dockerfiles"
-ENV MAKEFILES_URL="${DOCKERFILES_URL}/${DOCKERFILES_VERSION}/buildozer_android_new"
+ENV MAKEFILES_URL="${DOCKERFILES_URL}/${DOCKERFILES_VERSION}/buildozer_android"
+ENV BUILDOZER_VERSION="182d13f"
 
 
 # configure locale
@@ -31,22 +32,23 @@ ENV LANG="en_US.UTF-8" \
 RUN apt install -qq --yes --no-install-recommends \
     autoconf \
     automake \
-    cmake \
-    make \
     ca-certificates \
+    cmake \
     curl \
     gettext \
     libffi-dev \
     libltdl-dev \
+    libpython2.7-dev \
     libpython3.6-dev \
     libtool \
-    file \
+    make \
     openjdk-8-jdk \
     pkg-config \
     python3.6 \
     python3-setuptools \
-    python-pip \
-    python-setuptools \
+    python3-pip \
+    python3-setuptools \
+    python \
     sudo \
     unzip \
     xz-utils \
@@ -64,8 +66,8 @@ WORKDIR ${WORK_DIR}
 # install buildozer and dependencies
 RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk
 RUN make -f buildozer.mk
-# enforces buildozer master (cf880a3) until next release
-RUN pip install --upgrade https://github.com/kivy/buildozer/archive/cf880a3.zip
+# enforces buildozer master until next release
+RUN pip3 install --upgrade https://github.com/kivy/buildozer/archive/${BUILDOZER_VERSION}.zip
 
 COPY . ${WORK_DIR}
 # limits the amount of logs for Travis

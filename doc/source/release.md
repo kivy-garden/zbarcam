@@ -8,7 +8,7 @@ This is documenting the release process.
 Make sure the CHANGELOG.md is up to date and follows the http://keepachangelog.com guidelines.
 Start the release with git flow:
 ```sh
-git flow release start YYYYMMDD
+git flow release start YYYY.MMDD
 ```
 Now update the [CHANGELOG.md](/CHANGELOG.md) `[Unreleased]` section to match the new release version.
 Also update the `version` string from the
@@ -16,7 +16,7 @@ Also update the `version` string from the
 file.
 Then commit and finish release.
 ```sh
-git commit -a -m "YYYYMMDD"
+git commit -a -m "YYYY.MMDD"
 git flow release finish
 ```
 Push everything, make sure tags are also pushed:

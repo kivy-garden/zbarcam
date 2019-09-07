@@ -60,7 +60,7 @@ garden_requirements = xcamera
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
 
-# (str) Supported orientation (one of landscape, portrait or all)
+# (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
 
 # (list) List of service to declare
@@ -106,7 +106,7 @@ android.minapi = 21
 android.sdk = 20
 
 # (str) Android NDK version to use
-android.ndk = 17c
+android.ndk = 19b
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 android.ndk_api = 21
@@ -164,8 +164,8 @@ android.accept_sdk_license = True
 # bootstrap)
 #android.gradle_dependencies =
 
-# (str) python-for-android branch to use, defaults to master
-p4a.branch = master
+# (list) Java classes to add as activities to the manifest.
+#android.add_activites = com.example.ExampleActivity
 
 # (str) OUYA Console category. Should be one of GAME or APP
 # If you leave this blank, OUYA support will not be enabled
@@ -177,9 +177,13 @@ p4a.branch = master
 # (str) XML file to include as an intent filters in <activity> tag
 #android.manifest.intent_filters =
 
-# (list) Android additionnal libraries to copy into libs/armeabi
+# (str) launchMode to set for the main activity
+#android.manifest.launch_mode = standard
+
+# (list) Android additional libraries to copy into libs/armeabi
 #android.add_libs_armeabi = libs/android/*.so
 #android.add_libs_armeabi_v7a = libs/android-v7/*.so
+#android.add_libs_arm64_v8a = libs/android-v8/*.so
 #android.add_libs_x86 = libs/android-x86/*.so
 #android.add_libs_mips = libs/android-mips/*.so
 
@@ -194,18 +198,27 @@ p4a.branch = master
 # project.properties automatically.)
 #android.library_references =
 
+# (list) Android shared libraries which will be added to AndroidManifest.xml using <uses-library> tag
+#android.uses_library =
+
 # (str) Android logcat filters to use
 #android.logcat_filters = *:S python:D
 
 # (bool) Copy library instead of making a libpymodules.so
 #android.copy_libs = 1
 
-# (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86
+# (str) The Android arch to build for, choices: armeabi-v7a, arm64-v8a, x86, x86_64
 android.arch = armeabi-v7a
 
 #
 # Python for android (p4a) specific
 #
+
+# (str) python-for-android fork to use, defaults to upstream (kivy)
+#p4a.fork = kivy
+
+# (str) python-for-android branch to use, defaults to master
+p4a.branch = develop
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir =
@@ -219,6 +232,9 @@ android.arch = armeabi-v7a
 # (str) Bootstrap to use for android builds
 # p4a.bootstrap = sdl2
 
+# (int) port number to specify an explicit --port= p4a argument (eg for bootstrap flask)
+#p4a.port =
+
 
 #
 # iOS specific
@@ -226,6 +242,16 @@ android.arch = armeabi-v7a
 
 # (str) Path to a custom kivy-ios folder
 #ios.kivy_ios_dir = ../kivy-ios
+# Alternately, specify the URL and branch of a git checkout:
+ios.kivy_ios_url = https://github.com/kivy/kivy-ios
+ios.kivy_ios_branch = master
+
+# Another platform dependency: ios-deploy
+# Uncomment to use a custom checkout
+#ios.ios_deploy_dir = ../ios_deploy
+# Or specify URL and branch
+ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
+ios.ios_deploy_branch = 1.7.0
 
 # (str) Name of the certificate to use for signing the debug version
 # Get a list of available identities: buildozer ios list_identities
