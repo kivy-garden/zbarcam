@@ -30,18 +30,18 @@ git push --tags
 
 Build it:
 ```sh
-python setup.py sdist bdist_wheel
+make release/build
 ```
-Check archive content:
+This will build two packages, `kivy_garden.zbarcam` and the alias meta-package `zbarcam`.
+Also note we're running `twine check` on both archives.
+You can also check archive content manually via:
 ```sh
 tar -tvf dist/kivy_garden.zbarcam-*.tar.gz
 ```
-Twine check and upload:
+Last step is to upload both packages:
 ```sh
-twine check dist/*
-twine upload dist/*
+make release/upload
 ```
-Also publish the alias meta package `setup_meta.py`.
 
 ## Check Read the Docs
 
