@@ -111,6 +111,11 @@ $(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 
 opencv: $(OPENCV_DEPLOY)
 
+run/linux: virtualenv
+	$(PYTHON) src/main.py
+
+run: run/linux
+
 test:
 	$(TOX)
 
