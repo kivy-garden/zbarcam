@@ -38,7 +38,7 @@ version.filename = %(source.dir)s/kivy_garden/zbarcam/version.py
 # comma seperated e.g. requirements = sqlite3,kivy
 requirements =
     android,
-    kivy==5fc5385,
+    kivy==1.11.1,
     libiconv,
     libzbar,
     Pillow==5.2.0,

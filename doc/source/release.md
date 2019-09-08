@@ -10,7 +10,8 @@ Start the release with git flow:
 ```sh
 git flow release start YYYY.MMDD
 ```
-Now update the [CHANGELOG.md](/CHANGELOG.md) `[Unreleased]` section to match the new release version.
+Now update the [CHANGELOG.md](https://github.com/kivy-garden/zbarcam/blob/develop/CHANGELOG.md)
+`[Unreleased]` section to match the new release version.
 Also update the `version` string from the
 [src/kivy_garden/zbarcam/version.py](https://github.com/kivy-garden/zbarcam/blob/develop/src/kivy_garden/zbarcam/version.py)
 file.
