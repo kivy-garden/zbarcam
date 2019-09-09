@@ -22,7 +22,7 @@
   - Publish documentation to readthedocs, refs #18
   - Publish to PyPI, refs #19
 
-## [20190303]
+## [2019.0303]
 
   - Add Python3.6 support, refs #5
   - Fully migrated Android from PIL to Pillow, refs #13
@@ -31,12 +31,12 @@
   - Migrate from zbarlight to pyzbar, refs #32
   - Migrate to Python3.6 and opencv 4, refs #33
 
-## [20190223]
+## [2019.0223]
 
   - Fix zbarlight dependency in setup.py, refs #28
   - Migrate to zbarlight 2.1, refs #18
 
-## [20190222]
+## [2019.0222]
 
   - Provide Makefile, refs #15
   - Setup continuous integration testing, refs #6, #14
@@ -46,31 +46,31 @@
   - Using non-root Docker container, refs #27
   - Run UI tests from Travis, refs #26
 
-## [20171220]
+## [2017.1220]
 
   - Full screen camera
   - Kvlang refactoring
   - File tree refactoring
 
-## [20171117]
+## [2017.1117]
 
   - Integrated to kivy-garden
 
-## [20171102]
+## [2017.1102]
 
   - Add camera start/stop
 
-## [20171020]
+## [2017.1020]
 
   - Add Android autofocus, refs #2
   - Fix Android rotation, refs #3
   - Add animated demo gif
 
-## [20171019]
+## [2017.1019]
 
   - Add ZBar Android support, refs #1
   - Add PIL/Pillow Android workaround
 
-## [20171016]
+## [2017.1016]
 
   - Initial release
