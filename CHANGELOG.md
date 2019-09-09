@@ -1,5 +1,11 @@
 # Change Log
 
+## [2019.0909]
+
+  - Fix camera events not binded
+  - Makefile improvements
+  - Bump to Kivy==1.11.1, refs #22
+
 ## [2019.0907]
 
   - Update buildozer, p4a, and ndk versions, refs #21

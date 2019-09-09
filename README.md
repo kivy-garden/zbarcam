@@ -32,7 +32,7 @@ A full working demo is available in [src/main.py](https://github.com/kivy-garden
 ### Ubuntu
 Install system requirements (Ubuntu 18.04):
 ```sh
-sudo apt install libzbar-dev
+make system_dependencies
 ```
 
 Install garden requirements:
@@ -42,15 +42,17 @@ garden install --upgrade xcamera
 
 Install zbarcam:
 ```sh
-pip install --upgrade https://github.com/kivy-garden/zbarcam/archive/develop.zip
+pip install --upgrade zbarcam
 ```
 Then import it in your Python code via:
 ```python
 from kivy_garden.zbarcam import ZBarCam
 ```
 
-
-You may also need to compile/install OpenCV manually, see [OpenCV.md](OpenCV.md).
+[OpenCV](OpenCV.md):
+```sh
+make opencv
+```
 
 ### Android
 Build for Android via buildozer, see [buildozer.spec](buildozer.spec).

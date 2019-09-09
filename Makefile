@@ -50,12 +50,11 @@ all: system_dependencies virtualenv opencv
 
 venv:
 	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
-	. venv/bin/activate
+
+virtualenv: venv
 	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements/requirements.txt
 	$(GARDEN) install xcamera
-
-virtualenv: venv
 
 system_dependencies:
 ifeq ($(OS), Ubuntu)
@@ -112,8 +111,10 @@ $(OPENCV_DEPLOY): $(OPENCV_BUILD) virtualenv
 
 opencv: $(OPENCV_DEPLOY)
 
-clean:
-	rm -rf $(VENV_NAME) .tox/ $(DOWNLOAD_DIR) $(DOCS_DIR)/build/ dist/ build/
+run/linux: virtualenv
+	$(PYTHON) src/main.py
+
+run: run/linux
 
 test:
 	$(TOX)
@@ -122,25 +123,38 @@ uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
 	PYTHONPATH=src $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
 
-isort-check:
+isort-check: virtualenv
 	$(ISORT) --check-only --recursive --diff $(SOURCES)
 
-isort-fix:
+isort-fix: virtualenv
 	$(ISORT) --recursive $(SOURCES)
 
-flake8:
+flake8: virtualenv
 	$(FLAKE8) $(SOURCES)
 
 lint: isort-check flake8
 
+docs/clean:
+	rm -rf $(DOCS_DIR)/build/
+
 docs:
 	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html
 
-release/build:
+release/clean:
 	rm -rf dist/ build/
+
+release/build: release/clean
 	$(PYTHON) setup.py sdist bdist_wheel
 	$(PYTHON) setup_meta.py sdist bdist_wheel
 	$(TWINE) check dist/*
 
 release/upload:
 	$(TWINE) upload dist/*
+
+clean: release/clean docs/clean
+	py3clean src/
+	find src/ -type d -name "__pycache__" -exec rm -r {} +
+	find src/ -type d -name "*.egg-info" -exec rm -r {} +
+
+clean/full: clean
+	rm -rf $(VENV_NAME) .tox/ $(DOWNLOAD_DIR)

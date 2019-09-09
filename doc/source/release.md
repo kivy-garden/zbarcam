@@ -10,7 +10,8 @@ Start the release with git flow:
 ```sh
 git flow release start YYYY.MMDD
 ```
-Now update the [CHANGELOG.md](/CHANGELOG.md) `[Unreleased]` section to match the new release version.
+Now update the [CHANGELOG.md](https://github.com/kivy-garden/zbarcam/blob/develop/CHANGELOG.md)
+`[Unreleased]` section to match the new release version.
 Also update the `version` string from the
 [src/kivy_garden/zbarcam/version.py](https://github.com/kivy-garden/zbarcam/blob/develop/src/kivy_garden/zbarcam/version.py)
 file.
@@ -30,18 +31,18 @@ git push --tags
 
 Build it:
 ```sh
-python setup.py sdist bdist_wheel
+make release/build
 ```
-Check archive content:
+This will build two packages, `kivy_garden.zbarcam` and the alias meta-package `zbarcam`.
+Also note we're running `twine check` on both archives.
+You can also check archive content manually via:
 ```sh
 tar -tvf dist/kivy_garden.zbarcam-*.tar.gz
 ```
-Twine check and upload:
+Last step is to upload both packages:
 ```sh
-twine check dist/*
-twine upload dist/*
+make release/upload
 ```
-Also publish the alias meta package `setup_meta.py`.
 
 ## Check Read the Docs
 

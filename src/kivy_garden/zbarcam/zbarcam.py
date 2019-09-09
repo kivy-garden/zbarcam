@@ -80,6 +80,9 @@ class ZBarCam(AnchorLayout):
         # `self.xcamera._camera` instance may not be available if e.g.
         # the `CAMERA` permission is not granted
         self.xcamera.bind(on_camera_ready=self._on_camera_ready)
+        # camera may still be ready before we bind the event
+        if self.xcamera._camera is not None:
+            self._on_camera_ready(self.xcamera)
 
     def _on_camera_ready(self, xcamera):
         """
