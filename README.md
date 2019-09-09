@@ -49,11 +49,6 @@ Then import it in your Python code via:
 from kivy_garden.zbarcam import ZBarCam
 ```
 
-[OpenCV](OpenCV.md):
-```sh
-make opencv
-```
-
 ### Android
 Build for Android via buildozer, see [buildozer.spec](buildozer.spec).
 
@@ -77,9 +72,3 @@ You're missing the `xcamera` dependency. Install it as described in the install 
 More likely an import issue in your `.kv` file.
 Try to `from zbarcam import ZBarCam` in your `main.py` to see the exact error.
 It's common to forget `Pillow` in `buildozer.spec` `requirements` section.
-
-### OpenCV related
-See [OpenCV.md](OpenCV.md).
-
-## Credits
-I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).

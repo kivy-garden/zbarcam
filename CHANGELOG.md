@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+
+  - Use `opencv-python` from PyPI, refs #23
+
 ## [2019.0909]
 
   - Fix camera events not binded
