@@ -35,11 +35,6 @@ Install system requirements (Ubuntu 18.04):
 make system_dependencies
 ```
 
-Install garden requirements:
-```sh
-garden install --upgrade xcamera
-```
-
 Install zbarcam:
 ```sh
 pip install --upgrade zbarcam
@@ -47,11 +42,6 @@ pip install --upgrade zbarcam
 Then import it in your Python code via:
 ```python
 from kivy_garden.zbarcam import ZBarCam
-```
-
-[OpenCV](OpenCV.md):
-```sh
-make opencv
 ```
 
 ### Android
@@ -70,16 +60,7 @@ make uitest
 
 ## Troubleshooting
 
-### Install `Unable to import package 'kivy.garden.xcamera.XCamera'`
-You're missing the `xcamera` dependency. Install it as described in the install instructions.
-
 ### Android `ValueError: Empty module name`
 More likely an import issue in your `.kv` file.
 Try to `from zbarcam import ZBarCam` in your `main.py` to see the exact error.
 It's common to forget `Pillow` in `buildozer.spec` `requirements` section.
-
-### OpenCV related
-See [OpenCV.md](OpenCV.md).
-
-## Credits
-I borrowed a lot of code from [tito/android-zbar-qrcode](https://github.com/tito/android-zbar-qrcode).

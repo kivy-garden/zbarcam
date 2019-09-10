@@ -25,8 +25,10 @@ setup_params = {
     'install_requires': [
         'kivy',
         'numpy',
+        'opencv-python>=4',
         'pillow',
         'pyzbar',
+        'xcamera',
     ],
 }
 

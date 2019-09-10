@@ -43,7 +43,8 @@ requirements =
     libzbar,
     Pillow==5.2.0,
     python3,
-    pyzbar==0.1.8
+    pyzbar==0.1.8,
+    xcamera
 
 
 # (str) Custom source folders for requirements
@@ -52,7 +53,6 @@ requirements =
 
 # (list) Garden requirements
 #garden_requirements =
-garden_requirements = xcamera
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
