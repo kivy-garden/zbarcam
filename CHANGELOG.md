@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [2019.0910]
 
   - Use new `xcamera` from PyPI
   - Use `opencv-python` from PyPI, refs #23
