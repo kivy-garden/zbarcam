@@ -11,35 +11,22 @@ SOURCES=src/ tests/ setup.py setup_meta.py
 SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
 DOCS_DIR=doc
 SYSTEM_DEPENDENCIES= \
-	build-essential \
-	cmake \
-	curl \
 	libpython$(PYTHON_VERSION)-dev \
 	libsdl2-dev \
 	libzbar-dev \
 	tox \
-	virtualenv \
-	wget
+	virtualenv
 OS=$(shell lsb_release -si)
 PYTHON_MAJOR_VERSION=3
 PYTHON_MINOR_VERSION=6
 PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
 PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
-# python3 has a "m" suffix for both include path and library
-PYTHON_M=$(PYTHON_WITH_VERSION)
-SITE_PACKAGES_DIR=$(VENV_NAME)/lib/$(PYTHON_WITH_VERSION)/site-packages
-NPROC=`grep -c '^processor' /proc/cpuinfo`
-
-
-ifeq ($(PYTHON_MAJOR_VERSION), 3)
-	PYTHON_M := $(PYTHON_M)m
-endif
 
 
 all: system_dependencies virtualenv
 
 venv:
-	test -d venv || virtualenv -p python$(PYTHON_MAJOR_VERSION) venv
+	test -d venv || virtualenv -p $(PYTHON_WITH_VERSION) venv
 
 virtualenv: venv
 	$(PIP) install Cython==0.28.6
@@ -63,16 +50,16 @@ uitest: virtualenv
 	$(PIP) install -r requirements/test_requirements.txt
 	PYTHONPATH=src $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
 
-isort-check: virtualenv
+lint/isort-check: virtualenv
 	$(ISORT) --check-only --recursive --diff $(SOURCES)
 
-isort-fix: virtualenv
+lint/isort-fix: virtualenv
 	$(ISORT) --recursive $(SOURCES)
 
-flake8: virtualenv
+lint/flake8: virtualenv
 	$(FLAKE8) $(SOURCES)
 
-lint: isort-check flake8
+lint: lint/isort-check lint/flake8
 
 docs/clean:
 	rm -rf $(DOCS_DIR)/build/

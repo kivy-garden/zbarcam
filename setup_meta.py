@@ -1,5 +1,5 @@
 """
-Creates a distribution alias that just installs pyetheroll.
+Creates a distribution alias that just installs kivy_garden.zbarcam.
 """
 from setuptools import setup
 
