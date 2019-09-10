@@ -4,3 +4,4 @@ numpy==1.16.1
 opencv-python==4.1.1.26
 Pillow==5.2.0
 pyzbar==0.1.8
+xcamera

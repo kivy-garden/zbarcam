@@ -5,8 +5,8 @@ from functools import partial
 
 import mock
 from kivy.clock import Clock
-
 from kivy_garden.zbarcam.zbarcam import ZBarCam
+
 from main import DemoApp
 
 

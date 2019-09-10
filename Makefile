@@ -31,7 +31,9 @@ venv:
 virtualenv: venv
 	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements/requirements.txt
-	$(GARDEN) install xcamera
+
+virtualenv/test: virtualenv
+	$(PIP) install -r requirements/requirements-test.txt
 
 system_dependencies:
 ifeq ($(OS), Ubuntu)
@@ -46,17 +48,16 @@ run: run/linux
 test:
 	$(TOX)
 
-uitest: virtualenv
-	$(PIP) install -r requirements/test_requirements.txt
+uitest: virtualenv/test
 	PYTHONPATH=src $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
 
-lint/isort-check: virtualenv
+lint/isort-check: virtualenv/test
 	$(ISORT) --check-only --recursive --diff $(SOURCES)
 
-lint/isort-fix: virtualenv
+lint/isort-fix: virtualenv/test
 	$(ISORT) --recursive $(SOURCES)
 
-lint/flake8: virtualenv
+lint/flake8: virtualenv/test
 	$(FLAKE8) $(SOURCES)
 
 lint: lint/isort-check lint/flake8

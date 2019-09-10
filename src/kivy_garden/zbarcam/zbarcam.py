@@ -3,10 +3,10 @@ from collections import namedtuple
 
 import PIL
 from kivy.clock import Clock, mainthread
-from kivy.garden.xcamera import XCamera
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy_garden.xcamera import XCamera
 from pyzbar import pyzbar
 
 from .utils import check_request_camera_permission, fix_android_image
@@ -16,7 +16,7 @@ MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 class CustomXCamera(XCamera):
     """
-    Inherits from `kivy.garden.xcamera.XCamera`.
+    Inherits from `kivy_garden.xcamera.XCamera`.
     Overrides `_on_index()` to make sure the `kivy.core.camera.Camera` object
     is only created if permission are granted on Android.
     On other system, it's a noop calling the parent `_on_index()`.

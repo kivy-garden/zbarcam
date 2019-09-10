@@ -35,11 +35,6 @@ Install system requirements (Ubuntu 18.04):
 make system_dependencies
 ```
 
-Install garden requirements:
-```sh
-garden install --upgrade xcamera
-```
-
 Install zbarcam:
 ```sh
 pip install --upgrade zbarcam
@@ -64,9 +59,6 @@ make uitest
 ```
 
 ## Troubleshooting
-
-### Install `Unable to import package 'kivy.garden.xcamera.XCamera'`
-You're missing the `xcamera` dependency. Install it as described in the install instructions.
 
 ### Android `ValueError: Empty module name`
 More likely an import issue in your `.kv` file.

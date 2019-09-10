@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+  - Use new `xcamera` from PyPI
   - Use `opencv-python` from PyPI, refs #23
 
 ## [2019.0909]
