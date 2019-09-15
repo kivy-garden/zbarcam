@@ -1,10 +1,10 @@
-VENV_NAME=venv
-PIP=$(VENV_NAME)/bin/pip
+VIRTUAL_ENV ?= venv
+PIP=$(VIRTUAL_ENV)/bin/pip
 TOX=`which tox`
-GARDEN=$(VENV_NAME)/bin/garden
-PYTHON=$(VENV_NAME)/bin/python
-ISORT=$(VENV_NAME)/bin/isort
-FLAKE8=$(VENV_NAME)/bin/flake8
+GARDEN=$(VIRTUAL_ENV)/bin/garden
+PYTHON=$(VIRTUAL_ENV)/bin/python
+ISORT=$(VIRTUAL_ENV)/bin/isort
+FLAKE8=$(VIRTUAL_ENV)/bin/flake8
 TWINE=`which twine`
 SOURCES=src/ tests/ setup.py setup_meta.py
 # using full path so it can be used outside the root dir
@@ -25,10 +25,10 @@ PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
 
 all: system_dependencies virtualenv
 
-venv:
-	test -d venv || virtualenv -p $(PYTHON_WITH_VERSION) venv
+$(VIRTUAL_ENV):
+	virtualenv -p $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
 
-virtualenv: venv
+virtualenv: $(VIRTUAL_ENV)
 	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements/requirements.txt
 
@@ -85,4 +85,4 @@ clean: release/clean docs/clean
 	find src/ -type d -name "*.egg-info" -exec rm -r {} +
 
 clean/all: clean
-	rm -rf $(VENV_NAME) .tox/
+	rm -rf $(VIRTUAL_ENV) .tox/
