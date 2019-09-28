@@ -11,19 +11,40 @@ SOURCES=src/ tests/ setup.py setup_meta.py
 SPHINXBUILD=$(shell realpath venv/bin/sphinx-build)
 DOCS_DIR=doc
 SYSTEM_DEPENDENCIES= \
-	libpython$(PYTHON_VERSION)-dev \
+	build-essential \
+	ccache \
+	cmake \
+	curl \
 	libsdl2-dev \
+	libsdl2-image-dev \
+	libsdl2-mixer-dev \
+	libsdl2-ttf-dev \
+	libpython3.6-dev \
+	libpython$(PYTHON_VERSION)-dev \
 	libzbar-dev \
+	lsb-release \
+	make \
+	pkg-config \
+	python3.6 \
+	python3.6-dev \
+	python$(PYTHON_VERSION) \
+	python$(PYTHON_VERSION)-dev \
+	sudo \
 	tox \
 	virtualenv
 OS=$(shell lsb_release -si)
 PYTHON_MAJOR_VERSION=3
-PYTHON_MINOR_VERSION=6
+PYTHON_MINOR_VERSION=7
 PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
 PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
 
 
 all: system_dependencies virtualenv
+
+system_dependencies:
+ifeq ($(OS), Ubuntu)
+	sudo apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
+endif
 
 $(VIRTUAL_ENV):
 	virtualenv -p $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
@@ -34,11 +55,6 @@ virtualenv: $(VIRTUAL_ENV)
 
 virtualenv/test: virtualenv
 	$(PIP) install -r requirements/requirements-test.txt
-
-system_dependencies:
-ifeq ($(OS), Ubuntu)
-	sudo apt install --yes --no-install-recommends $(SYSTEM_DEPENDENCIES)
-endif
 
 run/linux: virtualenv
 	$(PYTHON) src/main.py
@@ -86,3 +102,15 @@ clean: release/clean docs/clean
 
 clean/all: clean
 	rm -rf $(VIRTUAL_ENV) .tox/
+
+docker/build:
+	docker build --tag=zbarcam-linux --file=dockerfiles/Dockerfile-linux .
+
+docker/run/test:
+	docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix zbarcam-linux 'make test'
+
+docker/run/app:
+	docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix --device=/dev/video0:/dev/video0 zbarcam-linux 'make run'
+
+docker/run/shell:
+	docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix --device=/dev/video0:/dev/video0 -it --rm zbarcam-linux
