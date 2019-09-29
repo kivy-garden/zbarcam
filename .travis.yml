@@ -10,8 +10,9 @@ env:
     - DISPLAY=:99.0
   matrix:
     - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make test'
-    - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make uitest'
-    - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
+    # broken in:
+    # https://github.com/kivy/python-for-android/pull/1986
+    # - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
 
 before_install:
   - sudo apt update -qq > /dev/null
