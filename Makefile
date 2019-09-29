@@ -29,10 +29,9 @@ SYSTEM_DEPENDENCIES= \
 	python3.6-dev \
 	python$(PYTHON_VERSION) \
 	python$(PYTHON_VERSION)-dev \
-	sudo \
 	tox \
 	virtualenv
-OS=$(shell lsb_release -si)
+OS=$(shell lsb_release -si 2>/dev/null || uname)
 PYTHON_MAJOR_VERSION=3
 PYTHON_MINOR_VERSION=7
 PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
@@ -62,8 +61,8 @@ run: virtualenv
 test:
 	$(TOX)
 
-uitest: virtualenv/test
-	PYTHONPATH=src $(PYTHON) -m unittest discover --top-level-directory=. --start-directory=tests/ui/
+pytest: virtualenv/test
+	PYTHONPATH=src $(PYTEST) tests/
 
 lint/isort-check: virtualenv/test
 	$(ISORT) --check-only --recursive --diff $(SOURCES)
