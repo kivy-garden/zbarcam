@@ -5,6 +5,7 @@ GARDEN=$(VIRTUAL_ENV)/bin/garden
 PYTHON=$(VIRTUAL_ENV)/bin/python
 ISORT=$(VIRTUAL_ENV)/bin/isort
 FLAKE8=$(VIRTUAL_ENV)/bin/flake8
+PYTEST=$(VIRTUAL_ENV)/bin/pytest
 TWINE=`which twine`
 SOURCES=src/ tests/ setup.py setup_meta.py
 # using full path so it can be used outside the root dir
@@ -35,6 +36,7 @@ OS=$(shell lsb_release -si 2>/dev/null || uname)
 PYTHON_MAJOR_VERSION=3
 PYTHON_MINOR_VERSION=7
 PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
+PYTHON_MAJOR_MINOR=$(PYTHON_MAJOR_VERSION)$(PYTHON_MINOR_VERSION)
 PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
 
 
@@ -50,7 +52,7 @@ $(VIRTUAL_ENV):
 
 virtualenv: $(VIRTUAL_ENV)
 	$(PIP) install Cython==0.28.6
-	$(PIP) install -r requirements/requirements.txt
+	$(PIP) install -r requirements.txt
 
 virtualenv/test: virtualenv
 	$(PIP) install -r requirements/requirements-test.txt
@@ -60,9 +62,10 @@ run: virtualenv
 
 test:
 	$(TOX)
+	@if test -n "$$CI"; then .tox/py$(PYTHON_MAJOR_MINOR)/bin/coveralls; fi; \
 
 pytest: virtualenv/test
-	PYTHONPATH=src $(PYTEST) tests/
+	PYTHONPATH=src $(PYTEST) --cov src/ --cov-report html tests/
 
 lint/isort-check: virtualenv/test
 	$(ISORT) --check-only --recursive --diff $(SOURCES)

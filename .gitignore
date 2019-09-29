@@ -8,3 +8,6 @@ bin/
 build/
 dist/
 *.egg-info/
+htmlcov/
+.coverage
+.coverage.*

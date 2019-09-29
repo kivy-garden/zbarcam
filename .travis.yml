@@ -25,4 +25,4 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - travis_wait docker run -e DISPLAY -e CI -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND
+  - travis_wait docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND

@@ -1,7 +1,7 @@
 import os
 import unittest
+from unittest import mock
 
-import mock
 from kivy.base import EventLoop
 from kivy.core.image import Image
 from kivy_garden.zbarcam import ZBarCam

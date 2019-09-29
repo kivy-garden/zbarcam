@@ -1,5 +1,10 @@
 # Change Log
 
+## [Unrelease]
+
+  - Setup coverage testing
+  - Bump to `xcamera>=2019.928`
+
 ## [2019.0910]
 
   - Use new `xcamera` from PyPI

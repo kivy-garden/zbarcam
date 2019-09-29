@@ -7,7 +7,6 @@ Hence we're not exposing `ZBarCam` if `pip` is detected.
 """
 import os
 
-
 project_dir = os.path.abspath(
     os.path.join(__file__, os.pardir, os.pardir, os.pardir, os.pardir))
 using_pip = os.path.basename(project_dir).startswith('pip-')

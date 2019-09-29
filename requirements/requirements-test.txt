@@ -1,4 +1,5 @@
-isort==4.2.5
-flake8==3.3.0
-mock==2.0.0
-pytest==4.3.0
+coveralls
+flake8
+isort
+pytest
+pytest-cov
