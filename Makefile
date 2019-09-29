@@ -56,10 +56,8 @@ virtualenv: $(VIRTUAL_ENV)
 virtualenv/test: virtualenv
 	$(PIP) install -r requirements/requirements-test.txt
 
-run/linux: virtualenv
+run: virtualenv
 	$(PYTHON) src/main.py
-
-run: run/linux
 
 test:
 	$(TOX)

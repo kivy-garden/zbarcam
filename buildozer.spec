@@ -44,7 +44,7 @@ requirements =
     Pillow==5.2.0,
     python3,
     pyzbar==0.1.8,
-    xcamera
+    xcamera==2019.928
 
 
 # (str) Custom source folders for requirements

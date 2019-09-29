@@ -1,10 +1,11 @@
+#:import XCamera kivy_garden.xcamera.XCamera
 #:import is_android kivy_garden.zbarcam.utils.is_android
 <ZBarCam>:
     Widget:
         # invert width/height on rotated Android
         # https://stackoverflow.com/a/45192295/185510
         id: proxy
-        CustomXCamera:
+        XCamera:
             id: xcamera
             play: True
             resolution: root.resolution
