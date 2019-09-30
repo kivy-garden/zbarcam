@@ -1,7 +1,6 @@
 VIRTUAL_ENV ?= venv
 PIP=$(VIRTUAL_ENV)/bin/pip
 TOX=`which tox`
-GARDEN=$(VIRTUAL_ENV)/bin/garden
 PYTHON=$(VIRTUAL_ENV)/bin/python
 ISORT=$(VIRTUAL_ENV)/bin/isort
 FLAKE8=$(VIRTUAL_ENV)/bin/flake8
@@ -16,6 +15,7 @@ SYSTEM_DEPENDENCIES= \
 	ccache \
 	cmake \
 	curl \
+	git \
 	libsdl2-dev \
 	libsdl2-image-dev \
 	libsdl2-mixer-dev \
@@ -23,8 +23,6 @@ SYSTEM_DEPENDENCIES= \
 	libpython3.6-dev \
 	libpython$(PYTHON_VERSION)-dev \
 	libzbar-dev \
-	lsb-release \
-	make \
 	pkg-config \
 	python3.6 \
 	python3.6-dev \
@@ -49,10 +47,10 @@ endif
 
 $(VIRTUAL_ENV):
 	virtualenv -p $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
-
-virtualenv: $(VIRTUAL_ENV)
 	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements.txt
+
+virtualenv: $(VIRTUAL_ENV)
 
 virtualenv/test: virtualenv
 	$(PIP) install -r requirements/requirements-test.txt
@@ -96,9 +94,9 @@ release/upload:
 	$(TWINE) upload dist/*
 
 clean: release/clean docs/clean
-	py3clean src/
-	find src/ -type d -name "__pycache__" -exec rm -r {} +
-	find src/ -type d -name "*.egg-info" -exec rm -r {} +
+	py3clean .
+	find . -type d -name "__pycache__" -exec rm -r {} +
+	find . -type d -name "*.egg-info" -exec rm -r {} +
 
 clean/all: clean
 	rm -rf $(VIRTUAL_ENV) .tox/
