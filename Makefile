@@ -79,7 +79,7 @@ lint: lint/isort-check lint/flake8
 docs/clean:
 	rm -rf $(DOCS_DIR)/build/
 
-docs:
+docs: virtualenv
 	cd $(DOCS_DIR) && SPHINXBUILD=$(SPHINXBUILD) make html
 
 release/clean:
