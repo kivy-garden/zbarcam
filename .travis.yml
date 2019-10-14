@@ -4,25 +4,15 @@ language: generic
 
 services:
   - docker
+  - xvfb
 
 env:
-  global:
-    - DISPLAY=:99.0
   matrix:
     - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make test'
-    # broken in:
-    # https://github.com/kivy/python-for-android/pull/1986
-    # - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
-
-before_install:
-  - sudo apt update -qq > /dev/null
-  - sudo apt install --yes --no-install-recommends xvfb
-
-install:
-  - docker build --tag=$TAG --file=$DOCKERFILE --build-arg CI .
+    - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
 
 before_script:
-  - sh -e /etc/init.d/xvfb start
+  - docker build --tag=$TAG --file=$DOCKERFILE --build-arg CI .
 
 script:
-  - travis_wait docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND
+  - travis_wait 30 docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND

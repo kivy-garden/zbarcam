@@ -38,7 +38,7 @@ make system_dependencies
 
 Install zbarcam:
 ```sh
-pip install --upgrade zbarcam
+pip install zbarcam
 ```
 Then import it in your Python code via:
 ```python

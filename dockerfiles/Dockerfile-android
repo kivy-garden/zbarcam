@@ -17,7 +17,7 @@ ENV WORK_DIR="${HOME_DIR}" \
 ENV DOCKERFILES_VERSION="v20190902" \
     DOCKERFILES_URL="https://raw.githubusercontent.com/AndreMiras/dockerfiles"
 ENV MAKEFILES_URL="${DOCKERFILES_URL}/${DOCKERFILES_VERSION}/buildozer_android"
-ENV BUILDOZER_VERSION="182d13f"
+ENV BUILDOZER_VERSION="81c31c4"
 
 
 # configure locale
@@ -29,7 +29,7 @@ ENV LANG="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
 
 # install system dependencies
-RUN apt install -qq --yes --no-install-recommends \
+RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends \
     autoconf \
     automake \
     ca-certificates \
@@ -54,20 +54,18 @@ RUN apt install -qq --yes --no-install-recommends \
     xz-utils \
     zip
 
-# prepare non root env
-RUN useradd --create-home --shell /bin/bash ${USER}
-# with sudo access and no password
-RUN usermod -append --groups sudo ${USER}
-RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# prepare non root env, with sudo access and no password
+RUN useradd --create-home --shell /bin/bash ${USER} && \
+    usermod -append --groups sudo ${USER} && \
+    echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER ${USER}
 WORKDIR ${WORK_DIR}
 
-# install buildozer and dependencies
-RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk
-RUN make -f buildozer.mk
-# enforces buildozer master until next release
-RUN pip3 install --upgrade https://github.com/kivy/buildozer/archive/${BUILDOZER_VERSION}.zip
+# install buildozer & dependencies and enforces buildozer master until next release
+RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk && \
+    make -f buildozer.mk && \
+    pip3 install --upgrade https://github.com/kivy/buildozer/archive/${BUILDOZER_VERSION}.zip
 
 COPY . ${WORK_DIR}
 # limits the amount of logs for Travis
