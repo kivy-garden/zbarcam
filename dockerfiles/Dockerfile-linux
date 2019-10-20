@@ -26,37 +26,21 @@ ENV LANG="en_US.UTF-8" \
 
 # install system dependencies
 RUN apt install --yes --no-install-recommends \
-    build-essential \
-    ccache \
-    cmake \
-    curl \
-    libsdl2-dev \
-    libsdl2-image-dev \
-    libsdl2-mixer-dev \
-    libsdl2-ttf-dev \
-    libpython3.6-dev \
-    libpython3.7-dev \
-    libzbar-dev \
     lsb-release \
     make \
-    pkg-config \
-    python3.6 \
-    python3.6-dev \
-    python3.7 \
-    python3.7-dev \
-    sudo \
-    tox \
-    virtualenv
+    sudo
 
 # prepare non root env
 RUN useradd --create-home --shell /bin/bash ${USER}
 # with sudo access and no password
 RUN usermod -append --groups sudo ${USER}
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# gives access to video so the camera can be accessed within the container
+RUN gpasswd --add ${USER} video
 
 USER ${USER}
 WORKDIR ${WORK_DIR}
 COPY . ${WORK_DIR}
 
-RUN make
+RUN sudo make system_dependencies && make virtualenv
 ENTRYPOINT ["./dockerfiles/start.sh"]

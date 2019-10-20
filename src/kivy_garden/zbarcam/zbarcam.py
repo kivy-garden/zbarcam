@@ -2,55 +2,15 @@ import os
 from collections import namedtuple
 
 import PIL
-from kivy.clock import Clock, mainthread
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
-from kivy_garden.xcamera import XCamera
 from pyzbar import pyzbar
 
-from .utils import check_request_camera_permission, fix_android_image
+from .utils import fix_android_image
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-
-
-class CustomXCamera(XCamera):
-    """
-    Inherits from `kivy_garden.xcamera.XCamera`.
-    Overrides `_on_index()` to make sure the `kivy.core.camera.Camera` object
-    is only created if permission are granted on Android.
-    On other system, it's a noop calling the parent `_on_index()`.
-    """
-
-    def __init__(self, **kwargs):
-        self.register_event_type('on_camera_ready')
-        super().__init__(**kwargs)
-
-    def _on_index(self, *largs):
-        """
-        Overrides `kivy.uix.camera.Camera._on_index()` to make sure
-        `camera.open()` is not called unless Android `CAMERA` permission is
-        granted, refs #12.
-        """
-        @mainthread
-        def on_permissions_callback(permissions, grant_results):
-            """
-            On camera permission callback calls parent `_on_index()` method.
-            """
-            if all(grant_results):
-                self._on_index_dispatch(*largs)
-        if check_request_camera_permission(callback=on_permissions_callback):
-            self._on_index_dispatch(*largs)
-
-    def _on_index_dispatch(self, *largs):
-        super()._on_index(*largs)
-        self.dispatch('on_camera_ready')
-
-    def on_camera_ready(self):
-        """
-        Fired when the camera is ready.
-        """
-        pass
 
 
 class ZBarCam(AnchorLayout):

@@ -28,7 +28,7 @@ setup_params = {
         'opencv-python>=4',
         'pillow',
         'pyzbar',
-        'xcamera',
+        'xcamera>=2019.928',
     ],
 }
 

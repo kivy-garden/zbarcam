@@ -4,24 +4,15 @@ language: generic
 
 services:
   - docker
+  - xvfb
 
 env:
-  global:
-    - DISPLAY=:99.0
   matrix:
     - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make test'
-    - TAG=zbarcam-linux DOCKERFILE=dockerfiles/Dockerfile-linux COMMAND='make uitest'
     - TAG=zbarcam-android DOCKERFILE=dockerfiles/Dockerfile-android COMMAND='buildozer android debug'
 
-before_install:
-  - sudo apt update -qq > /dev/null
-  - sudo apt install --yes --no-install-recommends xvfb
-
-install:
+before_script:
   - docker build --tag=$TAG --file=$DOCKERFILE --build-arg CI .
 
-before_script:
-  - sh -e /etc/init.d/xvfb start
-
 script:
-  - travis_wait docker run -e DISPLAY -e CI -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND
+  - travis_wait 30 docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix $TAG $COMMAND
