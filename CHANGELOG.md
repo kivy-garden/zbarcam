@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unrelease]
+## [2019.1020]
 
   - Setup coverage testing
   - Bump to `xcamera>=2019.928`
