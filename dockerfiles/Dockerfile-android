@@ -14,10 +14,6 @@ ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
     PATH="${HOME_DIR}/.local/bin:${PATH}"
-ENV DOCKERFILES_VERSION="v20190902" \
-    DOCKERFILES_URL="https://raw.githubusercontent.com/AndreMiras/dockerfiles"
-ENV MAKEFILES_URL="${DOCKERFILES_URL}/${DOCKERFILES_VERSION}/buildozer_android"
-ENV BUILDOZER_VERSION="81c31c4"
 
 
 # configure locale
@@ -36,23 +32,24 @@ RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends 
     cmake \
     curl \
     gettext \
+    git \
     libffi-dev \
     libltdl-dev \
-    libpython2.7-dev \
-    libpython3.6-dev \
+    libpython3.7-dev \
+    libssl-dev \
     libtool \
     make \
     openjdk-8-jdk \
     pkg-config \
-    python3.6 \
-    python3-setuptools \
+    python3.7 \
     python3-pip \
     python3-setuptools \
     python \
     sudo \
     unzip \
     xz-utils \
-    zip
+    zip \
+    zlib1g-dev
 
 # prepare non root env, with sudo access and no password
 RUN useradd --create-home --shell /bin/bash ${USER} && \
@@ -62,10 +59,8 @@ RUN useradd --create-home --shell /bin/bash ${USER} && \
 USER ${USER}
 WORKDIR ${WORK_DIR}
 
-# install buildozer & dependencies and enforces buildozer master until next release
-RUN curl --location --progress-bar ${MAKEFILES_URL}/buildozer.mk --output buildozer.mk && \
-    make -f buildozer.mk && \
-    pip3 install --upgrade https://github.com/kivy/buildozer/archive/${BUILDOZER_VERSION}.zip
+# install buildozer & dependencies
+RUN pip3 install --user --upgrade buildozer Cython==0.28.6
 
 COPY . ${WORK_DIR}
 # limits the amount of logs for Travis

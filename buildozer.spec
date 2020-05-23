@@ -38,11 +38,12 @@ version.filename = %(source.dir)s/kivy_garden/zbarcam/version.py
 # comma seperated e.g. requirements = sqlite3,kivy
 requirements =
     android,
-    kivy==1.11.1,
+    hostpython3==3.8.1,
+    Kivy==58e70b1,
     libiconv,
     libzbar,
-    Pillow==5.2.0,
-    python3,
+    Pillow==7.0.0,
+    python3==3.8.1,
     pyzbar==0.1.8,
     xcamera==2019.928
 
@@ -218,7 +219,7 @@ android.arch = armeabi-v7a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = develop
+p4a.branch = v2020.04.29
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir =

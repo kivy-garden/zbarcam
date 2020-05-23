@@ -20,14 +20,13 @@ SYSTEM_DEPENDENCIES= \
 	libsdl2-image-dev \
 	libsdl2-mixer-dev \
 	libsdl2-ttf-dev \
-	libpython3.6-dev \
+	libpython3.7-dev \
 	libpython$(PYTHON_VERSION)-dev \
 	libzbar-dev \
 	pkg-config \
-	python3.6 \
-	python3.6-dev \
 	python$(PYTHON_VERSION) \
 	python$(PYTHON_VERSION)-dev \
+	python$(PYTHON_VERSION)-venv \
 	tox \
 	virtualenv
 OS=$(shell lsb_release -si 2>/dev/null || uname)
@@ -46,7 +45,7 @@ ifeq ($(OS), Ubuntu)
 endif
 
 $(VIRTUAL_ENV):
-	virtualenv -p $(PYTHON_WITH_VERSION) $(VIRTUAL_ENV)
+	$(PYTHON_WITH_VERSION) -m venv $(VIRTUAL_ENV)
 	$(PIP) install Cython==0.28.6
 	$(PIP) install -r requirements.txt
 
