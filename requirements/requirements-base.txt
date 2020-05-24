@@ -1,7 +1,7 @@
-Kivy==1.11.1
+Kivy==2.0.0rc2
 Kivy-Garden==0.1.4
-numpy==1.16.1
-opencv-python==4.1.1.26
-Pillow==5.2.0
+numpy==1.18.4
+opencv-python==4.2.0.34
+Pillow==7.0.0
 pyzbar==0.1.8
 xcamera==2019.928
