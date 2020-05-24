@@ -1,5 +1,9 @@
 # Change Log
 
+## [2020.0524]
+
+  - Bumps dependencies versions, refs #31
+
 ## [2019.1020]
 
   - Setup coverage testing
