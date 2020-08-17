@@ -32,6 +32,10 @@ class ZBarCam(AnchorLayout):
         # that way the `XCamera` import doesn't happen too early
         Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
         super().__init__(**kwargs)
+
+        self._decoding_frame = threading.Event()
+        self._symbols_queue = queue.Queue()
+
         Clock.schedule_once(lambda dt: self._setup())
 
     def _setup(self):
@@ -51,8 +55,6 @@ class ZBarCam(AnchorLayout):
         Starts binding when the `xcamera._camera` instance is ready.
         """
         xcamera._camera.bind(on_texture=self._on_texture)
-        self._decoding_frame = threading.Event()
-        self._symbols_queue = queue.Queue()
         Clock.schedule_interval(self._update_symbols, 0)
 
     def _remove_shoot_button(self):
