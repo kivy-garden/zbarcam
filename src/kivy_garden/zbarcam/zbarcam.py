@@ -70,7 +70,7 @@ class ZBarCam(AnchorLayout):
         if not self._decoding_frame.is_set():
             self._decoding_frame.set()
             threading.Thread(
-                target=self._detect_qrcode_frame,
+                target=self._threaded_detect_qrcode_frame,
                 args=(
                     xcamera.texture,
                     xcamera.texture.pixels,
@@ -78,14 +78,20 @@ class ZBarCam(AnchorLayout):
                 ),
             ).start()
 
+    def _threaded_detect_qrcode_frame(self, texture, pixels, code_types):
+        self._symbols_queue.put(
+            self._detect_qrcode_frame(texture, code_types, pixels)
+        )
+        self._decoding_frame.clear()
+
     def _update_symbols(self, *args):
         try:
             self.symbols = self._symbols_queue.get_nowait()
         except queue.Empty:
             return
 
-    def _detect_qrcode_frame(self, texture, pixels, code_types):
-        image_data = pixels
+    def _detect_qrcode_frame(self, texture, code_types, pixels=None):
+        image_data = pixels or texture.pixels  # Use pixels kwarg for threading
         size = texture.size
         # Fix for mode mismatch between texture.colorfmt and data returned by
         # texture.pixels. texture.pixels always returns RGBA, so that should
@@ -101,8 +107,7 @@ class ZBarCam(AnchorLayout):
             symbol = ZBarCam.Symbol(type=code.type, data=code.data)
             symbols.append(symbol)
 
-        self._symbols_queue.put(symbols)
-        self._decoding_frame.clear()
+        return symbols
 
     @property
     def xcamera(self):
