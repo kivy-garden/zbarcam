@@ -28,7 +28,7 @@ class TestZBarCam(unittest.TestCase):
         fixture_path = os.path.join(FIXTURE_DIR, 'no_qr_code.png')
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
-        symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
+        symbols = self.zbarcam._detect_qrcode_frame(texture, texture.pixels, code_types)
         assert symbols == []
 
     def test_detect_qrcode_frame_one_qrcode(self):
@@ -38,7 +38,7 @@ class TestZBarCam(unittest.TestCase):
         fixture_path = os.path.join(FIXTURE_DIR, 'one_qr_code.png')
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
-        symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
+        symbols = self.zbarcam._detect_qrcode_frame(texture, texture.pixels, code_types)
         assert symbols == [
             ZBarCam.Symbol(type='QRCODE', data=b'zbarlight test qr code')
         ]
@@ -50,7 +50,7 @@ class TestZBarCam(unittest.TestCase):
         fixture_path = os.path.join(FIXTURE_DIR, 'one_qr_code_and_one_ean.png')
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
-        symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
+        symbols = self.zbarcam._detect_qrcode_frame(texture, texture.pixels, code_types)
         assert symbols == [
             ZBarCam.Symbol(type='QRCODE', data=b'zbarlight test qr code'),
             ZBarCam.Symbol(type='UPCA', data=b'012345678905')
@@ -63,7 +63,7 @@ class TestZBarCam(unittest.TestCase):
         fixture_path = os.path.join(FIXTURE_DIR, 'two_qr_codes.png')
         texture = Image(fixture_path).texture
         code_types = self.zbarcam.code_types
-        symbols = self.zbarcam._detect_qrcode_frame(texture, code_types)
+        symbols = self.zbarcam._detect_qrcode_frame(texture, texture.pixels, code_types)
         Symbol = ZBarCam.Symbol
         assert symbols == [
             Symbol(type='QRCODE', data=b'second zbarlight test qr code'),
