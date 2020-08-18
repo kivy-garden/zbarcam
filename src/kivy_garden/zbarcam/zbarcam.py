@@ -1,7 +1,7 @@
+import collections
 import os
-import threading
 import queue
-from collections import namedtuple
+import threading
 
 import PIL
 from kivy.clock import Clock
@@ -23,7 +23,7 @@ class ZBarCam(AnchorLayout):
     resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
-    Symbol = namedtuple('Symbol', ['type', 'data'])
+    Symbol = collections.namedtuple('Symbol', ['type', 'data'])
     # checking all possible types by default
     code_types = ListProperty(set(pyzbar.ZBarSymbol))
 
