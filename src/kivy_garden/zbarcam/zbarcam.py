@@ -4,13 +4,109 @@ from collections import namedtuple
 import PIL
 from kivy.clock import Clock
 from kivy.lang import Builder
+from kivy.logger import Logger
 from kivy.properties import ListProperty
 from kivy.uix.anchorlayout import AnchorLayout
-from pyzbar import pyzbar
 
 from .utils import fix_android_image
 
 MODULE_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+
+
+class ZBarDecoder:
+    def validate_code_types(self, code_types):
+        available_code_types = self.get_available_code_types()
+
+        if not all(
+            code_type in available_code_types
+            for code_type in code_types
+        ):
+            raise ValueError(
+                f'Invalid code types: {code_types}. '
+                f'Available code types: {available_code_types}'
+            )
+
+
+class PyZBarDecoder(ZBarDecoder):
+    @classmethod
+    def is_usable(cls):
+        try:
+            from pyzbar import pyzbar
+            cls.pyzbar = pyzbar
+            return True
+
+        except ImportError:
+            return False
+
+    def get_available_code_types(self):
+        return set(self.pyzbar.ZBarSymbol.__members__.keys())
+
+    def decode(self, image, code_types):
+        self.validate_code_types(code_types)
+        pyzbar_code_types = set(
+            getattr(self.pyzbar.ZBarSymbol, code_type)
+            for code_type in code_types
+        )
+        return [
+            ZBarCam.Symbol(type=code.type, data=code.data)
+            for code in self.pyzbar.decode(
+                image,
+                symbols=pyzbar_code_types,
+            )
+        ]
+
+
+class ZBarLightDecoder(ZBarDecoder):
+    @classmethod
+    def is_usable(cls):
+        try:
+            import zbarlight
+            cls.zbarlight = zbarlight
+            return True
+
+        except ImportError:
+            return False
+
+    def get_available_code_types(self):
+        return set(self.zbarlight.Symbologies.keys())
+
+    def decode(self, image, code_types):
+        self.validate_code_types(code_types)
+        zbarlight_code_types = set(
+            code_type.lower()
+            for code_type in code_types
+        )
+        codes = self.zbarlight.scan_codes(
+            zbarlight_code_types,
+            image
+        )
+
+        # zbarlight.scan_codes() returns None instead of []
+        if not codes:
+            return []
+
+        return [
+            ZBarCam.Symbol(type=None, data=code)
+            for code in codes
+        ]
+
+
+available_implementations = {
+    'pyzbar': PyZBarDecoder,
+    'zbarlight': ZBarLightDecoder,
+}
+
+
+for name, implementation in available_implementations.items():
+    if implementation.is_usable():
+        zbar_decoder = implementation()
+        Logger.info('ZBarCam: Using implementation %s', name)
+        break
+else:
+    raise ImportError(
+        'No zbar implementation available '
+        f'(tried {", ".join(available_implementations.keys())})'
+    )
 
 
 class ZBarCam(AnchorLayout):
@@ -23,7 +119,7 @@ class ZBarCam(AnchorLayout):
     symbols = ListProperty([])
     Symbol = namedtuple('Symbol', ['type', 'data'])
     # checking all possible types by default
-    code_types = ListProperty(set(pyzbar.ZBarSymbol))
+    code_types = ListProperty(zbar_decoder.get_available_code_types())
 
     def __init__(self, **kwargs):
         # lazy loading the kv file rather than loading at module level,
@@ -74,12 +170,7 @@ class ZBarCam(AnchorLayout):
         pil_image = PIL.Image.frombytes(mode='RGBA', size=size,
                                         data=image_data)
         pil_image = fix_android_image(pil_image)
-        symbols = []
-        codes = pyzbar.decode(pil_image, symbols=code_types)
-        for code in codes:
-            symbol = ZBarCam.Symbol(type=code.type, data=code.data)
-            symbols.append(symbol)
-        return symbols
+        return zbar_decoder.decode(pil_image, code_types)
 
     @property
     def xcamera(self):
