@@ -65,10 +65,10 @@ pytest: virtualenv/test
 	PYTHONPATH=src $(PYTEST) --cov src/ --cov-report html tests/
 
 lint/isort-check: virtualenv/test
-	$(ISORT) --check-only --recursive --diff $(SOURCES)
+	$(ISORT) --check --diff $(SOURCES)
 
 lint/isort-fix: virtualenv/test
-	$(ISORT) --recursive $(SOURCES)
+	$(ISORT) $(SOURCES)
 
 lint/flake8: virtualenv/test
 	$(FLAKE8) $(SOURCES)
