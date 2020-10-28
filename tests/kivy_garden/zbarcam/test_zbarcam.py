@@ -1,11 +1,12 @@
 import os
-import unittest
 from unittest import mock
 
+import pytest
 from kivy.base import EventLoop
 from kivy.core.image import Image
 
 from kivy_garden.zbarcam import ZBarCam
+from kivy_garden.zbarcam.zbarcam import XZbarDecoder
 
 FIXTURE_DIR = os.path.join(
     os.path.abspath(
@@ -16,9 +17,14 @@ FIXTURE_DIR = os.path.join(
 EventLoop.ensure_window()
 
 
-class TestZBarCam(unittest.TestCase):
+def patch_is_usable(implementation, m_is_usable):
+    return mock.patch(
+        f'kivy_garden.zbarcam.zbarcam.{implementation}.is_usable', m_is_usable)
 
-    def setUp(self):
+
+class TestZBarCam:
+
+    def setup_method(self):
         with mock.patch('kivy.uix.anchorlayout.AnchorLayout.__init__'):
             self.zbarcam = ZBarCam()
 
@@ -70,3 +76,28 @@ class TestZBarCam(unittest.TestCase):
             Symbol(type='QRCODE', data=b'second zbarlight test qr code'),
             Symbol(type='QRCODE', data=b'zbarlight test qr code'),
         ]
+
+
+class TestXZbarDecoder:
+
+    def test_singleton(self):
+        """
+        New instances of XZbarDecoder should share the same instance of
+        zbar_decoder.
+        """
+        xzbar_decoder = XZbarDecoder()
+        zbar_decoder = xzbar_decoder.zbar_decoder
+        assert zbar_decoder == XZbarDecoder().zbar_decoder
+
+    def test_no_zbar_implementation_available(self):
+        """
+        Makes sure `ImportError` is raised on no available implementations.
+        """
+        # resets the singleton instance to force reprobing
+        XZbarDecoder.zbar_decoder = None
+        m_is_usable = mock.Mock(return_value=False)
+        with patch_is_usable("PyZBarDecoder", m_is_usable), \
+                patch_is_usable("ZBarLightDecoder", m_is_usable), \
+                pytest.raises(
+                    ImportError, match="No zbar implementation available"):
+            XZbarDecoder()
