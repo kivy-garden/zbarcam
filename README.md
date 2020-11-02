@@ -6,7 +6,7 @@
 [![Documentation Status](https://readthedocs.org/projects/zbarcam/badge/?version=latest)](https://zbarcam.readthedocs.io/en/latest/?badge=latest)
 
 Real time Barcode and QR Code scanner using the camera.
-It's built on top of [Kivy](https://github.com/kivy/kivy) and [pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar).
+It's built on top of [Kivy](https://github.com/kivy/kivy) and works with both [pyzbar](https://github.com/NaturalHistoryMuseum/pyzbar) or [zbarlight](https://github.com/Polyconseil/zbarlight).
 
 <img src="https://raw.githubusercontent.com/AndreMiras/garden.zbarcam/develop/screenshot.gif" align="right" width="256" alt="screenshot" />
 
@@ -14,13 +14,12 @@ It's built on top of [Kivy](https://github.com/kivy/kivy) and [pyzbar](https://g
 Simply import and instanciate `ZBarCam` in your kvlang file and access its `symbols` property.
 ```yaml
 #:import ZBarCam kivy_garden.zbarcam.ZBarCam
-#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
 BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
         # optional, by default checks all types
-        code_types: ZBarSymbol.QRCODE, ZBarSymbol.EAN13
+        code_types: 'QRCODE', 'EAN13'
     Label:
         size_hint: None, None
         size: self.texture_size[0], 50
