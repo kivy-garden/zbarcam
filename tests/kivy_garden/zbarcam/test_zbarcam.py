@@ -6,7 +6,7 @@ from kivy.base import EventLoop
 from kivy.core.image import Image
 
 from kivy_garden.zbarcam import ZBarCam
-from kivy_garden.zbarcam.zbarcam import XZbarDecoder
+from kivy_garden.zbarcam.zbarcam import XZbarDecoder, ZBarDecoder
 
 FIXTURE_DIR = os.path.join(
     os.path.abspath(
@@ -20,6 +20,25 @@ EventLoop.ensure_window()
 def patch_is_usable(implementation, m_is_usable):
     return mock.patch(
         f'kivy_garden.zbarcam.zbarcam.{implementation}.is_usable', m_is_usable)
+
+
+class TestZBarDecoder:
+    """Tests the ZBarDecoder "abstract" class."""
+
+    def test_validate_code_types(self):
+        """
+        Checks `validate_code_types()` properly relies on
+        `get_available_code_types()` for valid types.
+        """
+        zbar_decoder = ZBarDecoder()
+        m_get_available_code_types = mock.Mock(
+            return_value=["QRCODE", "EAN13", "DATABAR"])
+        zbar_decoder.get_available_code_types = m_get_available_code_types
+        code_types = ["QRCODE", "EAN13"]
+        assert zbar_decoder.validate_code_types(code_types) is None
+        code_types = ["QRCODE", "EAN13", "DOES_NOT_EXIST"]
+        with pytest.raises(ValueError, match="Invalid code types"):
+            zbar_decoder.validate_code_types(code_types)
 
 
 class TestZBarCam:
