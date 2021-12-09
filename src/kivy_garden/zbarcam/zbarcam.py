@@ -138,11 +138,14 @@ class ZBarCam(AnchorLayout):
     Symbol = namedtuple('Symbol', ['type', 'data'])
     # checking all possible types by default
     code_types = ListProperty(XZbarDecoder().get_available_code_types())
+    kv_loaded = False
 
     def __init__(self, **kwargs):
-        # lazy loading the kv file rather than loading at module level,
-        # that way the `XCamera` import doesn't happen too early
-        Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
+        if not ZBarCam.kv_loaded:
+            # lazy loading the kv file rather than loading at module level,
+            # that way the `XCamera` import doesn't happen too early
+            Builder.load_file(os.path.join(MODULE_DIRECTORY, "zbarcam.kv"))
+            ZBarCam.kv_loaded = True
         super().__init__(**kwargs)
         Clock.schedule_once(lambda dt: self._setup())
 
