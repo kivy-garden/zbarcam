@@ -132,6 +132,7 @@ class ZBarCam(AnchorLayout):
     Widget that use the Camera and zbar to detect qrcode.
     When found, the `codes` will be updated.
     """
+    index = 0
     resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
@@ -195,7 +196,9 @@ class ZBarCam(AnchorLayout):
 
     @property
     def xcamera(self):
-        return self.ids['xcamera']
+        xcamera = self.ids['xcamera']
+        xcamera.index = self.index
+        return xcamera
 
     def start(self):
         self.xcamera.play = True
