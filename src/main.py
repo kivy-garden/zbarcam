@@ -15,7 +15,8 @@ BoxLayout:
     orientation: 'vertical'
     ZBarCam:
         id: zbarcam
-        index: 1    # or try a different value
+        # optional, override the camera index (default 0)
+        camera_index: 0     # or try a different value
         # optional, by default checks all types
         code_types: 'QRCODE', 'EAN13'
     Label:
