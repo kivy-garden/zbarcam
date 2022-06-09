@@ -5,7 +5,7 @@ import PIL
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.logger import Logger
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, NumericProperty
 from kivy.uix.anchorlayout import AnchorLayout
 
 from .utils import fix_android_image
@@ -132,6 +132,7 @@ class ZBarCam(AnchorLayout):
     Widget that use the Camera and zbar to detect qrcode.
     When found, the `codes` will be updated.
     """
+    camera_index = NumericProperty(0)
     resolution = ListProperty([640, 480])
 
     symbols = ListProperty([])
@@ -195,7 +196,9 @@ class ZBarCam(AnchorLayout):
 
     @property
     def xcamera(self):
-        return self.ids['xcamera']
+        xcamera = self.ids['xcamera']
+        xcamera.index = self.camera_index
+        return xcamera
 
     def start(self):
         self.xcamera.play = True
