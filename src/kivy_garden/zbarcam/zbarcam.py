@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.logger import Logger
 from kivy.properties import ListProperty, NumericProperty
 from kivy.uix.anchorlayout import AnchorLayout
+from kivy.utils import platform
 
 from .utils import fix_android_image
 
@@ -201,7 +202,11 @@ class ZBarCam(AnchorLayout):
         return xcamera
 
     def start(self):
+        if platform == "android":
+            self.xcamera._camera.init_camera()
         self.xcamera.play = True
 
     def stop(self):
         self.xcamera.play = False
+        if platform == "android":
+            self.xcamera._camera._release_camera()
