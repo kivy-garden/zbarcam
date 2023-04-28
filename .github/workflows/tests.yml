@@ -1,0 +1,57 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - tag: zbarcam-linux
+            dockerfile: dockerfiles/Dockerfile-linux
+            # TODO: debugging
+            command: "make test"
+            # command: "xeyes"
+          # TODO: debugging
+          # - tag: zbarcam-android
+          #   dockerfile: dockerfiles/Dockerfile-android
+          #   command: "buildozer android debug"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build --tag=${{ matrix.tag }} --file=${{ matrix.dockerfile }} --build-arg CI .
+
+      # - name: Run headless test
+      #   uses: coactions/setup-xvfb@v1
+      #   with:
+      #     run: docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix ${{ matrix.tag }} ${{ matrix.command }}
+
+      # TODO
+      - name: Run Docker container
+        # TODO: try with :0 too
+        env:
+          DISPLAY: :1
+        run: |
+          # TODO
+          ls -la /tmp/
+          sudo apt update
+          sudo apt install xvfb x11-xserver-utils
+          sudo apt install mutter dbus-x11
+          dbus-launch --auto-syntax > dbus-env;
+          source dbus-env;
+          # try with x11/wayland
+          mutter --headless --virtual-monitor 1920x1080 &
+          # xhost +local:root
+          # docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix ${{ matrix.tag }} ${{ matrix.command }}
+          xvfb-run --auto-servernum docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=unix$DISPLAY ${{ matrix.tag }} ${{ matrix.command }}
+          # docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix ${{ matrix.tag }} ${{ matrix.command }}
+          # docker run --env-file dockerfiles/env.list -v /tmp/.X11-unix:/tmp/.X11-unix ${{ matrix.tag }} ${{ matrix.command }}
+        # TODO: needed?
+        # timeout-minutes: 30

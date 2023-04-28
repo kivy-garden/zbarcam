@@ -1,8 +1,7 @@
 import os
+import re
 
 from setuptools import find_namespace_packages, setup
-
-from src.kivy_garden.zbarcam import version
 
 
 def read(fname):
@@ -10,10 +9,15 @@ def read(fname):
         return f.read()
 
 
+def get_version():
+    version_pattern = re.compile(r"__version__\s*=\s*['\"](.*?)['\"]")
+    return version_pattern.search("src/kivy_garden/zbarcam/version.py")
+
+
 # exposing the params so it can be imported
 setup_params = {
     'name': 'kivy_garden.zbarcam',
-    'version': version.__version__,
+    'version': get_version(),
     'description': 'Real time Barcode and QR Code scanner Edit',
     'long_description': read('README.md'),
     'long_description_content_type': 'text/markdown',
