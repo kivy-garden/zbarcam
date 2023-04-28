@@ -10,11 +10,12 @@
 #   docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix zbarcam-linux 'make uitest'
 # Or for interactive shell:
 #   docker run -it --rm zbarcam-linux
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}"
+ENV PYTHON_VERSION="3.10"
 
 # configure locale
 RUN apt update -qq > /dev/null && apt install --yes --no-install-recommends \
@@ -24,11 +25,32 @@ ENV LANG="en_US.UTF-8" \
     LANGUAGE="en_US.UTF-8" \
     LC_ALL="en_US.UTF-8"
 
+# TODO: x11-apps for debugging
 # install system dependencies
 RUN apt install --yes --no-install-recommends \
+    build-essential \
+    ccache \
+    cmake \
+    curl \
+    git \
+    libpython${PYTHON_VERSION}-dev \
+    libsdl2-dev \
+    libsdl2-image-dev \
+    libsdl2-mixer-dev \
+    libsdl2-ttf-dev \
+    libzbar-dev \
     lsb-release \
     make \
-    sudo
+    pkg-config \
+    python${PYTHON_VERSION} \
+    python${PYTHON_VERSION}-dev \
+    python${PYTHON_VERSION}-venv \
+    sudo \
+    tox \
+    virtualenv
+
+RUN apt install --yes --no-install-recommends \
+    x11-apps
 
 # prepare non root env
 RUN useradd --create-home --shell /bin/bash ${USER}
@@ -42,5 +64,7 @@ USER ${USER}
 WORKDIR ${WORK_DIR}
 COPY . ${WORK_DIR}
 
-RUN sudo make system_dependencies && make virtualenv
-ENTRYPOINT ["./dockerfiles/start.sh"]
+# TODO
+# RUN sudo make system_dependencies && make virtualenv
+# RUN make virtualenv
+# ENTRYPOINT ["./dockerfiles/start.sh"]
