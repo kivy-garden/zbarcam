@@ -76,10 +76,10 @@ class ZBarLightDecoder(ZBarDecoder):
             code_type.lower()
             for code_type in code_types
         )
-        codes = self.zbarlight.scan_codes(
-            zbarlight_code_types,
-            image
-        )
+        codes = [
+            self.zbarlight.scan_codes(code_type, image)
+            for code_type in zbarlight_code_types
+        ]
 
         # zbarlight.scan_codes() returns None instead of []
         if not codes:
