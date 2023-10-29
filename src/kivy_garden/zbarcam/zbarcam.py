@@ -213,7 +213,7 @@ class ZBarCam(AnchorLayout):
             self.xcamera._camera._release_camera()
 
     def unload_zbarcam(self):
-        id ZBarCam.kv_loaded:
+        if ZBarCam.kv_loaded:
             # unload zbarcam.kv
             zbar_kv_path = os.path.join(MODULE_DIRECTORY, 'zbarcam.kv')
             Builder.unload_file(zbar_kv_path)
