@@ -1,3 +1,4 @@
+import sys
 import os
 from collections import namedtuple
 
@@ -210,3 +211,19 @@ class ZBarCam(AnchorLayout):
         self.xcamera.play = False
         if platform == "android":
             self.xcamera._camera._release_camera()
+
+    def unload_zbarcam(self):
+        id ZBarCam.kv_loaded:
+            # unload zbarcam.kv
+            zbar_kv_path = os.path.join(MODULE_DIRECTORY, 'zbarcam.kv')
+            Builder.unload_file(zbar_kv_path)
+
+            # unload xcamera.kv
+            mod_path = os.path.dirname(
+                sys.modules['kivy_garden.xcamera'].__file__
+            )
+            xcam_kv_path = os.path.join(mod_path, 'xcamera.kv')
+            Builder.unload_file(xcam_kv_path)
+
+            # set kv_loaded = false
+            ZBarCam.kv_loaded = False
