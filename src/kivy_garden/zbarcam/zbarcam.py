@@ -208,22 +208,37 @@ class ZBarCam(AnchorLayout):
         self.xcamera.play = True
 
     def stop(self):
+        """
+        Stop xcamera, release device and unload
+        zbarcam.kv and xcamera.kv
+        """
         self.xcamera.play = False
+
+        # release device and unload kivy files
+        # in non android devices
+        if platform != "android":
+            self.xcamera._camera._device.release()
+            self._unload()
+
+        # release device in android devices
         if platform == "android":
             self.xcamera._camera._release_camera()
 
-    def unload_zbarcam(self):
+    def _unload(self):
+        """
+        Unload `zbarcam.kv` and `xcamera.kv` files
+        """
         if ZBarCam.kv_loaded:
             # unload zbarcam.kv
             zbar_kv_path = os.path.join(MODULE_DIRECTORY, 'zbarcam.kv')
             Builder.unload_file(zbar_kv_path)
 
             # unload xcamera.kv
-            mod_path = os.path.dirname(
-                sys.modules['kivy_garden.xcamera'].__file__
-            )
-            xcam_kv_path = os.path.join(mod_path, 'xcamera.kv')
+            module_path = sys.modules['kivy_garden.xcamera'].__file__
+            module_directory = os.path.dirname(module_path)
+            xcam_kv_path = os.path.join(module_directory, 'xcamera.kv')
             Builder.unload_file(xcam_kv_path)
 
-            # set kv_loaded = false
-            ZBarCam.kv_loaded = False
+            # sets kv_loaded
+            ZBarcam.kv_loaded = False
+
