@@ -1,6 +1,6 @@
 Kivy==2.0.0rc2
 Kivy-Garden==0.1.4
-numpy==1.18.4
+numpy==1.22.0
 opencv-python==4.2.0.34
 Pillow==8.2.0
 pyzbar==0.1.8
