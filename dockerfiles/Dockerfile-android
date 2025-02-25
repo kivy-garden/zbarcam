@@ -7,9 +7,11 @@
 # docker run zbarcam-android 'buildozer android debug'
 # Or for interactive shell:
 # docker run -it --rm zbarcam-android
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 ARG CI=false
+ARG PYTHON_VERSION=3.12
+ARG JAVA_VERSION=17
 ENV USER="user"
 ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
@@ -35,16 +37,16 @@ RUN apt update -qq > /dev/null && apt install -qq --yes --no-install-recommends 
     git \
     libffi-dev \
     libltdl-dev \
-    libpython3.7-dev \
+    libpython${PYTHON_VERSION}-dev \
     libssl-dev \
     libtool \
     make \
-    openjdk-8-jdk \
+    openjdk-${JAVA_VERSION}-jdk \
+    patch \
     pkg-config \
-    python3.7 \
+    python${PYTHON_VERSION} \
+    python${PYTHON_VERSION}-venv \
     python3-pip \
-    python3-setuptools \
-    python \
     sudo \
     unzip \
     xz-utils \
@@ -59,8 +61,13 @@ RUN useradd --create-home --shell /bin/bash ${USER} && \
 USER ${USER}
 WORKDIR ${WORK_DIR}
 
+# Create and activate a virtual environment
+RUN python3 -m venv ${HOME_DIR}/venv
+ENV PATH="${HOME_DIR}/venv/bin:${PATH}" \
+    VIRTUAL_ENV="${HOME_DIR}/venv"
+
 # install buildozer & dependencies
-RUN pip3 install --user --upgrade buildozer Cython==0.28.6
+RUN pip install --upgrade buildozer setuptools Cython==0.29.33
 
 COPY . ${WORK_DIR}
 # limits the amount of logs for Travis

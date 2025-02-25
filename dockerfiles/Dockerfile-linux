@@ -10,7 +10,7 @@
 #   docker run -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix zbarcam-linux 'make uitest'
 # Or for interactive shell:
 #   docker run -it --rm zbarcam-linux
-FROM ubuntu:18.04
+FROM ubuntu:24.04
 
 ENV USER="user"
 ENV HOME_DIR="/home/${USER}"

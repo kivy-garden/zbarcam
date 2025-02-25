@@ -1,6 +1,7 @@
 # zbarcam
 
-[![Build Status](https://travis-ci.org/kivy-garden/zbarcam.svg?branch=develop)](https://travis-ci.org/kivy-garden/zbarcam)
+[![Android Build](https://github.com/kivy-garden/zbarcam/actions/workflows/android-build.yml/badge.svg)](https://github.com/kivy-garden/zbarcam/actions/workflows/android-build.yml)
+[![Linux Build](https://github.com/kivy-garden/zbarcam/actions/workflows/linux-build.yml/badge.svg)](https://github.com/kivy-garden/zbarcam/actions/workflows/linux-build.yml)
 [![Coverage Status](https://coveralls.io/repos/github/kivy-garden/zbarcam/badge.svg?branch=develop)](https://coveralls.io/github/kivy-garden/zbarcam?branch=develop)
 [![PyPI version](https://badge.fury.io/py/zbarcam.svg)](https://badge.fury.io/py/zbarcam)
 [![Documentation Status](https://readthedocs.org/projects/zbarcam/badge/?version=latest)](https://zbarcam.readthedocs.io/en/latest/?badge=latest)
