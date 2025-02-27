@@ -20,7 +20,7 @@ SYSTEM_DEPENDENCIES= \
 	libsdl2-image-dev \
 	libsdl2-mixer-dev \
 	libsdl2-ttf-dev \
-	libpython3.7-dev \
+	libpython$(PYTHON_VERSION)-dev \
 	libpython$(PYTHON_VERSION)-dev \
 	libzbar-dev \
 	pkg-config \
@@ -31,7 +31,7 @@ SYSTEM_DEPENDENCIES= \
 	virtualenv
 OS=$(shell lsb_release -si 2>/dev/null || uname)
 PYTHON_MAJOR_VERSION=3
-PYTHON_MINOR_VERSION=7
+PYTHON_MINOR_VERSION=12
 PYTHON_VERSION=$(PYTHON_MAJOR_VERSION).$(PYTHON_MINOR_VERSION)
 PYTHON_MAJOR_MINOR=$(PYTHON_MAJOR_VERSION)$(PYTHON_MINOR_VERSION)
 PYTHON_WITH_VERSION=python$(PYTHON_VERSION)
@@ -46,7 +46,7 @@ endif
 
 $(VIRTUAL_ENV):
 	$(PYTHON_WITH_VERSION) -m venv $(VIRTUAL_ENV)
-	$(PIP) install Cython==0.28.6
+	$(PIP) install Cython==0.29.15
 	$(PIP) install -r requirements.txt
 
 virtualenv: $(VIRTUAL_ENV)

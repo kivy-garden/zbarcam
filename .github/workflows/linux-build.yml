@@ -1,0 +1,38 @@
+name: Linux Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux-build:
+    runs-on: ubuntu-latest
+    name: Linux Build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build --tag=zbarcam-linux \
+                       --file=dockerfiles/Dockerfile-linux .
+
+      - name: Setup virtual frame buffer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - name: Run tests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          docker run --env-file dockerfiles/env.list \
+                     -v /tmp/.X11-unix:/tmp/.X11-unix \
+                     -e DISPLAY=$DISPLAY \
+                     zbarcam-linux make test
+        timeout-minutes: 30

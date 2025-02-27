@@ -1,0 +1,27 @@
+name: Android Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  android-build:
+    runs-on: ubuntu-latest
+    name: Android Build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        run: |
+          docker build --tag=zbarcam-android \
+                       --file=dockerfiles/Dockerfile-android .
+
+      - name: Build Android app
+        run: |
+          docker run --env-file dockerfiles/env.list \
+                     zbarcam-android buildozer android debug
+        timeout-minutes: 30

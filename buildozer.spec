@@ -38,12 +38,12 @@ version.filename = %(source.dir)s/kivy_garden/zbarcam/version.py
 # comma seperated e.g. requirements = sqlite3,kivy
 requirements =
     android,
-    hostpython3==3.8.1,
-    Kivy==58e70b1,
+    hostpython3==3.10.12,
+    Kivy==2.3.1,
     libiconv,
     libzbar,
-    Pillow==7.0.0,
-    python3==3.8.1,
+    Pillow==8.4.0,
+    python3==3.10.12,
     pyzbar==0.1.8,
     xcamera==2019.928
 
@@ -78,7 +78,7 @@ orientation = portrait
 osx.python_version = 3
 
 # Kivy version to use
-osx.kivy_version = 1.9.1
+osx.kivy_version = 2.3.1
 
 #
 # Android specific
@@ -107,7 +107,7 @@ android.minapi = 21
 android.sdk = 20
 
 # (str) Android NDK version to use
-android.ndk = 19b
+android.ndk = 25b
 
 # (int) Android NDK API to use. This is the minimum API your app will support, it should usually match android.minapi.
 android.ndk_api = 21
@@ -219,7 +219,7 @@ android.arch = armeabi-v7a
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-p4a.branch = v2020.04.29
+p4a.branch = v2024.01.21
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 #p4a.source_dir =
