@@ -8,7 +8,7 @@ It can also be ran via p4a/buildozer.
 """
 from kivy.app import App
 from kivy.lang import Builder
-
+#Test
 DEMO_APP_KV_LANG = """
 #:import ZBarCam kivy_garden.zbarcam.ZBarCam
 BoxLayout:
